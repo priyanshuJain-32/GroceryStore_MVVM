@@ -1,25 +1,17 @@
 <template>
-  <div class="hello">
-    <p>
-    </p>
-    <h3>Project Brief</h3>
-      <p>Welcome to my first Javascript project build on MVVM architecture.</p>
-    <h3>Tech Used</h3>
-      <p>Vue CLI | VueX | Vue Router | Python | REST-API | SQLITE | Redis | Celery</p>
-    <h3>Get Started</h3>
-      <p>Start by <router-link to="/signup">signing up</router-link> for a user account and enjoy.</p>
-      <p>Thank you for taking the time to view my work.</p>
-    <h3>Inspirational Links</h3>
-    <ul>
-      <li><a href="https://www.youtube.com/@academind">Academind</a></li>
-      <li><a href="https://www.youtube.com/watch?v=6avJHaC3C2U">Art of Code</a></li>
-    </ul>
+  <div class="logininput">
+    <label for="username"><b>Username</b></label> | 
+    <input type="text" placeholder="Enter Username" name="username" required>
+    <br><br>
+    <label for="password"><b>Password</b></label> | 
+    <input type="password" placeholder="Enter Password" name="password" required>
+    
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'LoginInput',
 }
 </script>
 
