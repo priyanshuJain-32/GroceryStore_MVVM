@@ -4,19 +4,19 @@
     <br>
 
     <label for="first_name"><b>First Name</b></label> | 
-    <input :value="first_name" type="text" placeholder="First Name" name="first_name" required>
+    <input v-model="formData.first_name" type="text" placeholder="First Name" name="first_name" required>
     <br>
     <br>
     <label for="last_name"><b>Last Name</b></label> | 
-    <input :value="last_name" type="text" placeholder="Last Name" name="last_name">
+    <input v-model="formData.last_name" type="text" placeholder="Last Name" name="last_name">
     <br><br>
     <label for="username"><b>Username</b></label> | 
-    <input :value="username" type="text" placeholder="Enter Username" name="username" required>
+    <input v-model="formData.username" type="text" placeholder="Enter Username" name="username" required>
     <br><br>
     <label for="password"><b>Password</b></label> | 
-    <input :value="password" type="password" placeholder="Enter Password" name="password" required>
+    <input v-model="formData.password" type="password" placeholder="Enter Password" name="password" required>
     <br><br>
-    <button @click="signup">Sign Up</button>
+    <button type="button" @click="submitSignup">Sign Up</button>
   </div>
 </template>
 
@@ -25,25 +25,25 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'SignupInput',
+  data(){
+    return {
+      formData: {
+        first_name: '',
+        last_name: '',
+        username: '',
+        password: '',
+      }
+    }
+  },
   computed: {
-    ...mapState('auth', {
-      first_name: state => state.first_name,
-      last_name: state => state.last_name,
-      username: state => state.username,
-      password: state => state.password
-    })
+    ...mapState('auth',['first_name', 'last_name', 'username', 'password'])
   },
   methods: {
-    signup() {
-      // console.log("Component"+document.getElementsByName('first_name')[0].value);
-      const first_name = first_name.value;
-      const last_name = document.getElementsByName('last_name')
-      const username = document.getElementsByName('username')[0].value
-      const password = document.getElementsByName('password')[0].value
-      console.log(first_name)
-      this.$store.commit('signup',first_name, last_name, username, password);
+    submitSignup() {
+      const data =  this.formData;
+      this.signup(data);
     },
-    ...mapMutations({signup: 'auth/signup'})
+    ...mapMutations('auth',['signup'])
   }
 }
 </script>
