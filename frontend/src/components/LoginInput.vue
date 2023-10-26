@@ -3,7 +3,7 @@
     <h3>Fill details to Signup</h3>
     <br>
     <label for="username"><b>Username</b></label> | 
-    <input v-model="params.username" type="text" placeholder="Enter Username" name="username" required>
+    <input v-model="params.user_name" type="text" placeholder="Enter Username" name="username" required>
     <br><br>
     <label for="password"><b>Password</b></label> | 
     <input v-model="params.password" type="password" placeholder="Enter Password" name="password" required>
@@ -24,11 +24,11 @@ export default {
 
   methods: {
     submitLogin() {
-      this.getCat();
-      this.login(this.params);
+      this.userLogin(this.params);
+      this.loginUser();
     },
-    ...mapMutations('auth',['login']),
-    ...mapActions('auth',['getCat'])
+    ...mapMutations('auth',['userLogin']),
+    ...mapActions('auth',['loginUser'])
   }
 }
 </script>
