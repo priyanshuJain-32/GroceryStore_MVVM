@@ -1,6 +1,11 @@
-let config = {headers: {
+export const config = {headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
   }}
 
-export default config;
+export const tokenConfig = { headers: {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Authorization': `Bearer: ${jwt}`
+  }
+}

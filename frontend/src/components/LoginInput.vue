@@ -6,14 +6,14 @@
     <input v-model="params.user_name" type="text" placeholder="Enter Username" name="username" required>
     <br><br>
     <label for="password"><b>Password</b></label> | 
-    <input v-model="params.password" type="password" placeholder="Enter Password" name="password" required>
-    <br><br>
-    <button type="button" @click="submitLogin">Sign Up</button>
+    <input v-model="params.password" @input="submitLogin" type="password" placeholder="Enter Password" name="password" required>
+    <!-- <br><br>
+    <button type="button" @click="submitLogin">Login</button> -->
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'LoginInput',
@@ -25,10 +25,8 @@ export default {
   methods: {
     submitLogin() {
       this.userLogin(this.params);
-      this.loginUser();
     },
     ...mapMutations('auth',['userLogin']),
-    ...mapActions('auth',['loginUser'])
   }
 }
 </script>

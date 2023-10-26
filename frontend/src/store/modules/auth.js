@@ -1,5 +1,5 @@
 import axios from "axios";
-import config from "./config";
+import { tokenConfig, config } from "./config";
 import baseUrl from "./baseUrl";
 
 const auth = {namespaced: true,
@@ -9,7 +9,8 @@ const auth = {namespaced: true,
       last_name: '',
       role: '',
       user_name: '',
-      password: ''
+      password: '',
+      jwt: ''
       
     }),
     
@@ -36,7 +37,13 @@ const auth = {namespaced: true,
       userLogin(state, params) {
         state.user_name = params.user_name;
         state.password = params.password;
-        state.role = 'user';
+      },
+      setToken(state, data){
+        console.log('Inside setToken')
+        state.jwt = data.jwt;
+      },
+      setRole(state, role) {
+        state.role = role;
       }
     },
     
@@ -44,14 +51,14 @@ const auth = {namespaced: true,
         async registerUser(context) {
           const path =  `${baseUrl}/signup`;
           const userData = {
-            'name': context.state.first_name+" "+context.state.last_name,
-            'user_name':context.state.user_name, 
+            'name': context.state.first_name+"_"+context.state.last_name,
+            'user_name':context.state.user_name,
             'password': context.state.password,
             'role': context.state.role
           }
           const { data } = await axios.post(path, userData, config);
           
-          console.log(data);
+          context.commit('setToken', data)
         },
 
         async loginUser(context){
@@ -61,11 +68,19 @@ const auth = {namespaced: true,
             'password' : context.state.password
           }
           const { data } = await axios.post(path, userData, config);
-          // if (data['authentication'] == true) {
-          //   console.log(data);
-          // }
-          console.log(data);
+          context.commit('setToken', data)
+        },
+        
+        async logout(context){
+          const path = `${baseUrl}/logout`;
+          const userData = {
+            'user_name' : context.state.user_name,
+            'password' : context.state.password
+          }
+          const { data } = await axios.post(path, userData, tokenConfig);
+          context.commit('setToken', data)
         }
+
     }
   }
 
