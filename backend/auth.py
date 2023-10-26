@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash
 import jwt
 from datetime import datetime, timedelta
 
-from .token import token_required
+from .token_deco import token_required
 
 
 from . import db
@@ -50,7 +50,7 @@ def signup():
 	db.session.commit()
 
 	token = jwt.encode({
-		'sub': user.user_name,
+		'sub': new_user.user_name,
 		'iat': datetime.utcnow(),
 		'exp': datetime.utcnow() + timedelta(minutes=30)
 	}, current_app.config['SECRET_KEY'])
