@@ -19,7 +19,7 @@ def create_app():
 	app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + os.path.join(current_dir, "instance/database.sqlite3") # adding the database to app
 
 	 # Passing the app object into db object
-	CORS(app)
+	CORS(app, origins=["http://localhost:8080"])
 	api.init_app(app)
 	db.init_app(app)
 	app.app_context().push()

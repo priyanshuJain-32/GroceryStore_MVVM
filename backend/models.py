@@ -1,15 +1,12 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin
-
+from werkzeug.security import check_password_hash, generate_password_hash
 from . import db
-# Start by creating a db object
-# Here we did not mention __name__ inside as we are not creating the database but creating classes of database created using another method
 
 # ====================================== Inventory =======================================
 class Category(db.Model):
 	category_id = db.Column(db.Integer(), primary_key = True)
-	category_name = db.Column(db.String(50), nullable = False)
 	
+	category_name = db.Column(db.String(50), nullable = False)
+
 	products = db.relationship('Product', backref='category')
 
 class Product(db.Model):
@@ -23,10 +20,12 @@ class Product(db.Model):
 	discount = db.Column(db.Integer())
 	product_quantity = db.Column(db.Integer(), nullable = False)
 	expiry_date = db.Column(db.Date())
+
 	product_category_id = db.Column(db.Integer(), db.ForeignKey('category.category_id'))
 
+
 # ======================================= User Data =======================================
-class Users(UserMixin, db.Model):
+class Users(db.Model):
 	user_id = db.Column(db.Integer(), primary_key = True)
 	name = db.Column(db.String(50))
 	user_name = db.Column(db.String(50), nullable = False)
@@ -35,8 +34,29 @@ class Users(UserMixin, db.Model):
 	
 	addresses = db.relationship('Address')
 	orders = db.relationship('Orders')
+	
 	def get_id(self):
 		return self.user_id
+
+	@classmethod
+	def authenticate(cls, **kwargs):
+		user_name_ = kwargs.get('user_name')
+		password_ = kwargs.get('password')
+		# password_h = generate_password_hash(password_, method='sha256')
+		# print("model1",password_h)
+		# print(user_name_, password_)
+		if not user_name_ or not password_:
+			return None
+		print("here")
+		user = cls.query.filter_by(user_name=user_name_).first()
+		# print("model2",user.password)
+		if not user or not check_password_hash(user.password, password_):
+			return None
+		return user
+	
+	def to_dict(self):
+		return dict(id=self.id, email=self.email)
+
 
 class Address(db.Model):
 	address_id = db.Column(db.Integer(), primary_key = True)
