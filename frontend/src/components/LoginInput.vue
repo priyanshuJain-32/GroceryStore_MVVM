@@ -1,38 +1,34 @@
 <template>
-  <div class="logininput">
+  <div class="login-input">
     <h3>Fill details to Signup</h3>
     <br>
     <label for="username"><b>Username</b></label> | 
-    <input v-model="formData.username" type="text" placeholder="Enter Username" name="username" required>
+    <input v-model="params.username" type="text" placeholder="Enter Username" name="username" required>
     <br><br>
     <label for="password"><b>Password</b></label> | 
-    <input v-model="formData.password" type="password" placeholder="Enter Password" name="password" required>
+    <input v-model="params.password" type="password" placeholder="Enter Password" name="password" required>
     <br><br>
     <button type="button" @click="submitLogin">Sign Up</button>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
+
 export default {
   name: 'LoginInput',
-  data(){
-    return {
-      formData: {
-        username: '',
-        password: '',
-      }
-    }
-  },
+  
   computed: {
-    ...mapState('auth',['username', 'password'])
+    ...mapGetters('auth',['params'])
   },
+
   methods: {
     submitLogin() {
-      const data =  this.formData;
-      this.login(data);
+      this.getCat();
+      this.login(this.params);
     },
-    ...mapMutations('auth',['login'])
+    ...mapMutations('auth',['login']),
+    ...mapActions('auth',['getCat'])
   }
 }
 </script>

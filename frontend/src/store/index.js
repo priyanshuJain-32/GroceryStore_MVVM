@@ -1,11 +1,12 @@
 import { createStore } from 'vuex'
-import auth from './auth.js'
+import auth from './modules/auth.js'
+import meta from './modules/meta.js'
+
 const store = createStore({ modules: {
-    'auth': auth,
+    meta,  
+    auth,
     
   } 
 })
-
-// store.registerModule()
 
 export default(store);

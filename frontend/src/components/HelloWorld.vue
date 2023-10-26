@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="hello-world">
     <h1>Welcome to Shop of Life.</h1>
     <p>
       Here we sell something special.
