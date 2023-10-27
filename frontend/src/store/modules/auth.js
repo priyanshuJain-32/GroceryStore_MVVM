@@ -1,6 +1,7 @@
 import axios from "axios";
-import { tokenConfig, config } from "./config";
+import { config } from "./config";
 import baseUrl from "./baseUrl";
+import { isValidJwt } from "../../../utils/index";
 
 const auth = {namespaced: true,
     
@@ -23,6 +24,11 @@ const auth = {namespaced: true,
           user_name: state.user_name,
           password: state.password
         }
+      },
+      token(state){
+        return {
+          jwt: state.jwt
+        }
       }
     },
 
@@ -38,12 +44,17 @@ const auth = {namespaced: true,
         state.user_name = params.user_name;
         state.password = params.password;
       },
-      setToken(state, data){
-        console.log('Inside setToken')
-        state.jwt = data.jwt;
-      },
-      setRole(state, role) {
+      setUserRole(state, role) {
         state.role = role;
+      },
+      setToken(state, payload){
+        state.jwt = payload.token;
+      },
+      unsetToken(state){
+        state.jwt = '';
+      },
+      isAuthenticated(state){
+        return isValidJwt(state.jwt)
       }
     },
     
@@ -56,29 +67,34 @@ const auth = {namespaced: true,
             'password': context.state.password,
             'role': context.state.role
           }
-          const { data } = await axios.post(path, userData, config);
-          
-          context.commit('setToken', data)
+          axios.post(path, userData, config)
+          .then((response) => {
+            context.commit('setToken', response.data)
+            context.dispatch('product/fetchProducts','',{ root: true })
+          }).catch(error => {
+            console.error('failedAuthentication', error)
+          })
         },
 
         async loginUser(context){
           const path = `${baseUrl}/login`;
           const userData = {
             'user_name' : context.state.user_name,
-            'password' : context.state.password
-          }
-          const { data } = await axios.post(path, userData, config);
-          context.commit('setToken', data)
+            'password' : context.state.password,
+            'role': context.state.role
+          };
+          axios.post(path, userData, config)
+          .then((response) => {
+            context.commit('setToken', response.data)
+            context.dispatch('product/fetchProducts','',{ root: true })
+          }).catch(error => {
+            console.error('failedAuthentication', error)
+            throw "WRONG CREDENTIALS";
+          })
         },
         
         async logout(context){
-          const path = `${baseUrl}/logout`;
-          const userData = {
-            'user_name' : context.state.user_name,
-            'password' : context.state.password
-          }
-          const { data } = await axios.post(path, userData, tokenConfig);
-          context.commit('setToken', data)
+          context.commit('unsetToken');
         }
 
     }

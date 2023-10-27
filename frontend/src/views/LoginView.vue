@@ -19,10 +19,10 @@ export default {
   },
   methods: {
     login() {
-      this.userRole('user');
+      this.setUserRole('user');
       this.loginUser();
     },
-    ...mapMutations('auth',['userRole']),
+    ...mapMutations('auth',['setUserRole']),
     ...mapActions('auth',['loginUser'])
   }
 }
