@@ -6,6 +6,7 @@ from flask import Blueprint, request, jsonify
 from . import db
 from .models import Category, Product
 from datetime import datetime
+from .token_deco import token_required
 
 resource = Blueprint('resource',__name__)
 
@@ -130,8 +131,9 @@ def delete_category(category_id):
 
 
 #------------------------ GET All Product ---------------------------------------------
-@resource.route("/api/product", methods=['GET'])	
-def get_all_product():
+@resource.route("/api/fetch_products", methods=['GET'])
+@token_required
+def get_all_product(user):
 	
 	all_product_data = Product.query.all()
 	product_list = []

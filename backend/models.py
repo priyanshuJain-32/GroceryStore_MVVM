@@ -42,14 +42,10 @@ class Users(db.Model):
 	def authenticate(cls, **kwargs):
 		user_name_ = kwargs.get('user_name')
 		password_ = kwargs.get('password')
-		# password_h = generate_password_hash(password_, method='sha256')
-		# print("model1",password_h)
-		# print(user_name_, password_)
+
 		if not user_name_ or not password_:
 			return None
-		print("here")
 		user = cls.query.filter_by(user_name=user_name_).first()
-		# print("model2",user.password)
 		if not user or not check_password_hash(user.password, password_):
 			return None
 		return user

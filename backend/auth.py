@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template, request, jsonify, redirect, url_for, flash
+from flask import Blueprint, current_app, request, jsonify, redirect, url_for
 from werkzeug.security import generate_password_hash
 import jwt
 from datetime import datetime, timedelta
@@ -19,15 +19,14 @@ def login():
 	user = Users.authenticate(**data)
 
 	if not user:
-		print('fail')
-		return jsonify({'message': 'Invalid credentials', 'authenticated': False})
+		return jsonify({'message': 'Invalid credentials', 'authenticated': False}), 401
 	
 	token = jwt.encode({
 		'sub': user.user_name,
 		'iat': datetime.utcnow(),
 		'exp': datetime.utcnow() + timedelta(minutes=30)
-	}, current_app.config['SECRET_KEY'])
-	return jsonify({'token': token})
+	}, current_app.config['SECRET_KEY'], algorithm="HS256")
+	return jsonify({'token': token}), 200
 	
 
 @auth.route('/signup', methods=['POST'])
@@ -53,14 +52,13 @@ def signup():
 		'sub': new_user.user_name,
 		'iat': datetime.utcnow(),
 		'exp': datetime.utcnow() + timedelta(minutes=30)
-	}, current_app.config['SECRET_KEY'])
+	}, current_app.config['SECRET_KEY'], algorithm="HS256")
 	return jsonify({'token': token})
 
 
 @auth.route('/logout')
 @token_required
 def logout():
-	# return 'Logout'
 	logout_user()
 	return redirect(url_for('main.home'))
 

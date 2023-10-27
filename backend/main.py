@@ -1,9 +1,10 @@
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, jsonify, request, render_template, redirect, url_for
 from . import db
 from flask_login import login_required, current_user
 from .models import Category, Product, Orders, Cart
 from datetime import datetime, date
 import os
+from .token_deco import token_required
 
 current_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -11,10 +12,10 @@ main = Blueprint('main',__name__)
 
 #======================= Home Controls =====================================
 
-@main.route('/')
-def home():
-	if request.method == 'GET':
-		return render_template('home.html')
+# @main.route('/')
+# def home():
+# 	if request.method == 'GET':
+# 		return render_template('home.html')
 
 #--------------------------------------------------------------------------
 # User specific controllers -----------------------------------------------
@@ -22,12 +23,12 @@ def home():
 
 #======================= Product User Controls =====================================
 
-@main.route('/product_page')
-@login_required
-def product_page():
+@main.route('/fetch_products')
+@token_required
+def product_page(user):
 	category_data = Category.query.all()
-	return render_template('product_page.html', name=current_user.name, 
-		category_data=category_data,current_user=current_user)
+	print(category_data)
+	return jsonify({'categories': category_data}), 200
 
 #======================= Order User Controls =====================================
 
