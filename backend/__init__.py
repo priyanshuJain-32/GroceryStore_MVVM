@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy # Importing the database objects and classes from models
 import os
-from flask_login import LoginManager
 from flask_cors import CORS
 from flask_restful import Api
+# from app.models import Address, Cart, Category, Order, Product
 
 db = SQLAlchemy()
 api = Api()
@@ -25,27 +25,34 @@ def create_app():
 	app.app_context().push()
 	
 	#adding blueprint for auth routes
-	from .auth import auth as auth_blueprint
-	app.register_blueprint(auth_blueprint)
+	from .api.authApi import auth
+	app.register_blueprint(auth)
+
+	#adding blueprint for cart
+	from .api.cartApi import cart
+	app.register_blueprint(cart)
+
+	# adding blueprint for category
+	from .api.categoryApi import category
+	app.register_blueprint(category)
+
+	# adding blueprint for order
+	from .api.orderApi import order
+	app.register_blueprint(order)
+
+	#adding blueprint for product
+	from .api.productApi import product
+	app.register_blueprint(product)
+
+	#adding blueprint for reports
+	from .api.reportApi import report
+	app.register_blueprint(report)
 
 	#adding blueprint for other parts of the app
-	from .main import main as main_blueprint
-	app.register_blueprint(main_blueprint)
+	from .api.userApi import user
+	app.register_blueprint(user)
 
-	# adding blueprint for other parts of the app
-	from .resources import resource as resource_blueprint
-	app.register_blueprint(resource_blueprint)
-
-	#adding Login framework
-	login_manager = LoginManager()
-	login_manager.login_view = 'auth.login'
-	login_manager.init_app(app)
-
-	from .models import Users
-
-	@login_manager.user_loader
-	def load_user(user_id):
-		return Users.query.get(int(user_id))
+	
 
 	return app
  
