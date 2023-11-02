@@ -13,7 +13,7 @@ import LoginInput from '@/components/LoginInput.vue'
 import { mapMutations, mapActions } from 'vuex';
 
 export default {
-  name: 'SignUpView',
+  name: 'LoginView',
   components: {
     LoginInput
   },
