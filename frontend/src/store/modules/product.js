@@ -15,6 +15,10 @@ const product = {namespaced: true,
           products: state.products,
         }
       },
+      productById: (state) => (id) => {
+        return state.products.find(product => product.product_id == id);
+      }
+      
     },
 
     mutations: {
@@ -25,7 +29,7 @@ const product = {namespaced: true,
     
     actions: {
         async fetchProducts(context) {
-          const path =  `${baseUrl}/fetch_products`;
+          const path = `${baseUrl}/get_all_product`;
           console.log("reached here in product")
           axios.get(path, tokenConfig(context.rootGetters['auth/token'].jwt))
           .then((response) => {
@@ -35,7 +39,10 @@ const product = {namespaced: true,
             console.error('fetchFailed', error)
           })
         },
-    }
+        buyNow(context, payload){
+          router.push(`/buy-now-user-view/${payload.product_id}`)
+        },
+    },
   }
 
   export default product;

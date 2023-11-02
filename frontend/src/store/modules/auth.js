@@ -1,7 +1,7 @@
 import axios from "axios";
 import { config } from "./config";
 import baseUrl from "./baseUrl";
-import { isValidJwt } from "../../../utils/index";
+import { isValidJwt } from "../../utils/index";
 
 const auth = {namespaced: true,
     
@@ -93,7 +93,7 @@ const auth = {namespaced: true,
           })
         },
         
-        async logout(context){
+        logout(context){
           context.commit('unsetToken');
         }
 
