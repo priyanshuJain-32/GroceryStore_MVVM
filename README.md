@@ -1,8 +1,8 @@
-# Welcome to my project on Grocery Store Version 2.
+## Welcome to my project on Grocery Store Version 2.
 
-## Tech Stack:
+### My Tech Stack
 
-### Frontend - WebApp
+#### Frontend - WebApp
 * Javascript
 * UI Framework - VueJS
 * State Management - VueX Store
@@ -12,7 +12,7 @@
 * CSS Preprocessor - Sass
 * Module Bundler - Webpack
 
-### Backend
+#### Backend
 * Server - Python Server
 * Server Side Runtime - Python
 * Framework - Flask
@@ -22,7 +22,7 @@
 * Authentication - JWT Tokens
 * Job Scheduler - Celery
 
-### API
+#### API
 * Frontend - Axios
 * Backend - RestAPI
 
