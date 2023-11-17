@@ -11,8 +11,8 @@ const routes = [
   {path: '/categories-user-view', name: 'categories-user-view', component: () => import('../views/CategoriesView.vue')},
   {path: '/products-user-view/', name: 'products-user-view', component: () => import('../views/ProductsView.vue')},
   {path: '/buy-now-user-view/:product_id', name: 'buy-now-user-view', component: () => import('../views/BuyNowUserView.vue')},
-  {path: '/cart-user-view', name: 'cart-user-view', component: () => import('../views/BuyNowUserView.vue')},
-  {path: '/orders-user-view', name: 'orders-user-view', component: () => import('../views/BuyNowUserView.vue')}
+  {path: '/cart-user-view', name: 'cart-user-view', component: () => import('../views/CartUserView.vue')},
+  {path: '/orders-user-view', name: 'orders-user-view', component: () => import('../views/OrdersUserView.vue')}
 ]
 
 const router = createRouter({
