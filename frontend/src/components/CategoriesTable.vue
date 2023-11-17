@@ -12,8 +12,8 @@
 					<!-- <div v-if="product.product_id in category.category_product_id" > -->
 						
 						<td>{{ category.category_id }}</td>
-						<td><router-link to="/products-user-view/{{ category.category_id }}">{{ category.category_name }}</router-link></td>
-						<td><router-link to="/products-user-view/{{ category.category_id }}">{{ category.category_name }}</router-link></td>
+						<td><router-link to='/products-user-view/{{$category.category_id}}'>{{ category.category_name }}</router-link></td>
+						<td><router-link to='/products-user-view/\"{{$category.category_id}}\"'>{{ category.category_name }}</router-link></td>
 						
 						<!-- <td>{{ product.sell_price }}</td>
 						<td v-if="params.role == 'manager' || params.role=='admin'">{{ product.product_quantity }}</td>
@@ -37,8 +37,6 @@
 </template>
 
 
-
-
 <script>
 import { mapGetters, mapActions } from 'vuex';
 
@@ -54,6 +52,9 @@ export default {
 		this.buyNow(product_id);
 	},
 	...mapActions('product',['buyNow'])
+  },
+  beforeMount() {
+	this.$store.dispatch('category/fetchCategories')
   }
 }
 </script>

@@ -12,7 +12,7 @@
     <label for="role">Select role:</label>
     <select v-model="params.role" name="role">
       <option value="user">User</option>
-      <option value="manager">Manager</option>  
+      <option value="manager">Manager</option>
     </select>
 
     <br><br>

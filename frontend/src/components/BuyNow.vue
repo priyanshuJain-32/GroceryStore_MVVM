@@ -11,8 +11,6 @@
 			<th>Discount %</th>
 			<th>Offer Price</th>
 			<th>Product Expiry Date</th>
-			<th></th>
-			<th></th>
 			
 			<tr>
 				<td>{{ product.product_category_id }}</td>
@@ -24,22 +22,23 @@
 				<td>{{ product.discount }}</td>
 				<td>{{ (product.sell_price|int)*(100-product.discount)/100 }}</td>
 				<td>{{ product.expiry_date }}</td>
-				
-				<td><form>
-					<input type="submit" @click="buyComplete(product.product_id)" style="width: 120px;" name="buy_product" value = "Buy Now"/></form></td>
-				<td><form>
-					<input type="submit" @click="cartProduct(product.product_id)" style="width: 150px;" name="cart_product" value = "Add to Cart"/></form></td>
 			</tr>
-			<td></td>
-			
 		</table>
-		<div v-if="product === undefined">Product not found</div>
+		
+		<form v-if="product.product_quantity != 0">
+			<label for="buy_product"><b>Enter Quantity</b></label> | 
+			<input v-model="order.order_quantity" type="number" placeholder="Enter Quantity" name="order_quantity" max="5" min="1" required/>
+			
+			<input type="button" @click="completeBuy" style="width: 150px;" name="cart_product" value = "Buy"/>
+		</form>
+		
+		<div v-if="product.product_quantity == 0">Out of Stock</div>
     </div>
 </template>
 
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'ProductsTable',
@@ -47,11 +46,18 @@ export default {
 	
 	product() {return this.productById(this.$route.params.product_id)},
 	...mapGetters('auth',['params']),
-	...mapGetters('product',['productById'])
+	...mapGetters('product',['productById']),
+	...mapGetters('order',['order'])
 	
   },
   methods: {
-	...mapActions('product',['buyNow']),
+	completeBuy(){
+		this.setQuantity(this.order)
+		this.buyNow({product_id: this.$route.params.product_id,
+		order_quantity: this.order.order_quantity})
+	},
+	...mapMutations('order',['setQuantity']),
+	...mapActions('order',['buyNow']),
   }
 }
 </script>

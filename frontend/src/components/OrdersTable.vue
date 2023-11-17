@@ -1,7 +1,9 @@
-<template>
-    <div class="products-table">
+// Fix Cart data flow while carting products the current logic just adds items into cart and does not fix it.
 
-		<table id = "product-table" class="table" style="width: 95%; text-align: center;">
+<template>
+    <div class="cart-table">
+
+		<table id = "cart-table" class="table" style="width: 95%; text-align: center;">
 			<th>Category Id</th>
 			<th>Category</th>
 			<th>Product</th>
@@ -14,7 +16,7 @@
 			<th></th>
 			<th></th>
 			
-			<tr v-for="product in products.products" :key="product.product_id">
+			<tr v-for="product in fullOrders.products" :key="product.product_id">
 				<div v-if="product.quantity==0">Out of Stock</div>
 					<td>{{ product.product_category_id }}</td>
 					<td>{{ product.product_category }}</td>
@@ -29,35 +31,32 @@
 					<td><router-link :to="'/buy-now-user-view/' + product.product_id">Buy Now</router-link></td>
 					<td><form>
 						<input type="button" @click="this.addToCart(product.product_id)" style="width: 150px;" name="cart_product" value = "Add to Cart"/></form></td>
+					<td><form>	
+						<input type="button" @click="this.decrementCart(product.product_id)" style="width: 150px;" name="reduce_cart_product" value = "Delete from Cart"/></form></td>
 			</tr>
-			<td></td>
-			
 		</table>
+		<form>
+			<input type="button" @click="this.checkoutCart" style="width: 150px;" name="checkout_cart" value = "Checkout Cart"/>
+		</form>
     </div>
 </template>
 
 
-
-
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ProductsTable',
   computed: {
     ...mapGetters('auth',['params']),
-	...mapGetters('product',['products']),
-	...mapGetters('cart',['cart'])
+	...mapGetters('order',['fullOrders'])
   },
   methods: {
-	...mapActions('product',['buyNow']),
-	...mapMutations('cart',['addToCart']),
-	...mapActions('cart',['updateCart', 'fetchCart'])
-
+	...mapActions('order',['buyNow', 'fetchOrders']),
   },
-//   created(){
-// 	this.fetchCart()
-//   }
+  beforeMount(){
+	this.fetchOrders()	
+  }
 }
 </script>
 
