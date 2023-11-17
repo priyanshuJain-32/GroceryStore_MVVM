@@ -1,18 +1,18 @@
 <template>
-  <div class="buyNow">
+  <div class="cart">
     <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
-    <BuyNow/>
+    <CartTable/>
   </div>
 </template>
 
 <script>
 
-import BuyNow from '@/components/BuyNow.vue';
+import CartTable from '@/components/CartTable.vue';
 
 export default {
-  name: 'BuyNowUserView',
+  name: 'CartUserView',
   components: {
-    BuyNow
+    CartTable
   },
 }
 </script>

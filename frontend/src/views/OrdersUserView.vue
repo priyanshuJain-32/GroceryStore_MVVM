@@ -1,18 +1,18 @@
 <template>
-  <div class="buyNow">
+  <div class="orders">
     <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
-    <BuyNow/>
+    <OrdersTable/>
   </div>
 </template>
 
 <script>
 
-import BuyNow from '@/components/BuyNow.vue';
+import OrdersTable from '@/components/OrdersTable.vue';
 
 export default {
-  name: 'BuyNowUserView',
+  name: 'OrdersUserView',
   components: {
-    BuyNow
+    OrdersTable
   },
 }
 </script>
