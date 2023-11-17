@@ -5,7 +5,7 @@ from .. import db
 class Users(db.Model):
 	user_id = db.Column(db.Integer(), primary_key = True)
 	name = db.Column(db.String(50))
-	user_name = db.Column(db.String(50), nullable = False)
+	user_name = db.Column(db.String(50), nullable = False, unique=True)
 	password = db.Column(db.String(50), nullable = False)
 	role = db.Column(db.String(10), nullable = False)
 	# last_login = db.Column(db.DateTime, nullable = True)
