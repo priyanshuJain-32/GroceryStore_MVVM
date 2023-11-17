@@ -1,6 +1,6 @@
 import axios from "axios";
-import { config } from "./config";
-import baseUrl from "./baseUrl";
+import { config } from "../../utils/config";
+import baseUrl from "../../utils/baseUrl";
 import { isValidJwt } from "../../utils/index";
 
 const auth = {namespaced: true,
@@ -71,6 +71,7 @@ const auth = {namespaced: true,
           .then((response) => {
             context.commit('setToken', response.data)
             context.dispatch('product/fetchProducts','',{ root: true })
+            context.dispatch('cart/fetchCart', '', { root: true })
           }).catch(error => {
             console.error('failedAuthentication', error)
           })
@@ -87,6 +88,7 @@ const auth = {namespaced: true,
           .then((response) => {
             context.commit('setToken', response.data)
             context.dispatch('product/fetchProducts','',{ root: true })
+            context.dispatch('cart/fetchCart', '', { root: true })
           }).catch(error => {
             console.error('failedAuthentication', error)
             throw "WRONG CREDENTIALS";

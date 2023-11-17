@@ -1,6 +1,6 @@
 import axios from "axios";
-import { tokenConfig } from "./config";
-import baseUrl from "./baseUrl";
+import { tokenConfig } from "../../utils/config";
+import baseUrl from "../../utils/baseUrl";
 import router from "@/router";
 
 const product = {namespaced: true,
@@ -38,9 +38,6 @@ const product = {namespaced: true,
           }).catch(error => {
             console.error('fetchFailed', error)
           })
-        },
-        buyNow(context, payload){
-          router.push(`/buy-now-user-view/${payload.product_id}`)
         },
     },
   }

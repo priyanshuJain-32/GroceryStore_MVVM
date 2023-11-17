@@ -1,8 +1,6 @@
 import axios from "axios";
-import { tokenConfig } from "./config";
-import baseUrl from "./baseUrl";
-// import { isValidJwt } from "../../utils/index";
-import router from "@/router";
+import { tokenConfig } from "../../utils/config";
+import baseUrl from "../../utils/baseUrl";
 
 const category = {namespaced: true,
     
@@ -29,8 +27,6 @@ const category = {namespaced: true,
         axios.get(path, tokenConfig(context.rootGetters['auth/token'].jwt))
         .then((response) => {
           context.commit('setCategories', response.data)
-          context.dispatch('product/fetchProducts','',{ root: true })
-          router.push('/categories-user-view')
         }).catch(error => {
           console.error('fetchFailed', error)
         })
