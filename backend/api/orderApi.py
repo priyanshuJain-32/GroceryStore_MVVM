@@ -10,22 +10,26 @@ current_dir = os.path.abspath(os.path.dirname(__file__))
 
 order = Blueprint('orderApi',__name__)
 
-
 #--------------------------------------------------------------------------
 # User specific controllers -----------------------------------------------
 #--------------------------------------------------------------------------
 
 #======================= Order User Controls =====================================
 
-@order.route('/order_product/<int:product_id>', methods=['GET', 'POST'])
+@order.route('/order_product', methods=['POST'])
 @token_required
-def order_product(user, product_id):
+def order_product(user):
 	
+	data = request.get_json()
+	product_id = data.get('product_id')
+	order_quantity = data.get('order_quantity')
+
 	product_data = Product.query.filter_by(product_id=product_id).first()
-	if request.method=='GET':
-		return render_template('order.html',product_data=product_data)
 	
-	order_quantity_ = int(request.form.get('product_quantity'))
+	if product_data.product_quantity < order_quantity:
+		return jsonify({'message': 'Not Enough Stock', 'available': product_data.product_quantity})
+
+	order_quantity_ = order_quantity
 	
 	# Handling the quantity of order and stock remaining
 	product_data.product_quantity -= order_quantity_
@@ -37,5 +41,20 @@ def order_product(user, product_id):
 		order_user_id=order_user_id_,order_product_id=order_product_id_)
 	db.session.add(new_order)
 	db.session.commit()
-	return redirect(url_for('main.product_page'))
+	return jsonify({'message': 'Product ordered'}), 200
 
+@order.route('/get_all_order', methods=['GET'])
+@token_required
+def get_all_order(user):
+	
+	all_order_data = Orders.query.filter_by(order_user_id = user.user_id)
+	orders_list = []
+	if all_order_data:
+		for order_data in all_order_data:
+			orders_list.append({"order_id": order_data.order_id,
+				"order_quantity": order_data.order_quantity,
+				"sell_date": order_data.sell_date,
+				"order_product_id": order_data.order_product_id})
+		return jsonify(orders_list), 200
+
+	return jsonify({"message": "No orders found"})
