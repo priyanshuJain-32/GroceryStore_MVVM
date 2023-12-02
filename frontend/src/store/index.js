@@ -5,6 +5,7 @@ import product from './modules/product.js'
 import category from './modules/category.js'
 import order from './modules/order.js'
 import cart from './modules/cart.js'
+import request from './modules/request.js'
 
 const store = createStore({ modules: {
     meta,  
@@ -13,6 +14,7 @@ const store = createStore({ modules: {
     category,
     order,
     cart,
+    request,
     
   } 
 })

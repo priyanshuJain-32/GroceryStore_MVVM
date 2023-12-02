@@ -8,7 +8,7 @@ const auth = {namespaced: true,
     state: () => ({
       first_name: '',
       last_name: '',
-      role: '',
+      role: 'user',
       user_name: '',
       password: '',
       jwt: ''
@@ -87,8 +87,14 @@ const auth = {namespaced: true,
           axios.post(path, userData, config)
           .then((response) => {
             context.commit('setToken', response.data)
-            context.dispatch('product/fetchProducts','',{ root: true })
-            context.dispatch('cart/fetchCart', '', { root: true })
+            context.dispatch('product/fetchProducts', '', { root: true })
+            context.dispatch('category/fetchCategories', '', { root: true })
+            if (context.state.role == 'user'){
+              context.dispatch('cart/fetchCart', '', { root: true })
+            } else {
+              context.dispatch('request/fetchRequests', '', { root: true })
+              
+            }
           }).catch(error => {
             console.error('failedAuthentication', error)
             throw "WRONG CREDENTIALS";

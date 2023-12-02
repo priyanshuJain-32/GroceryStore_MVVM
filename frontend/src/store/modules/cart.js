@@ -18,12 +18,17 @@ const cart = {namespaced: true,
       fullCart(state, getters, rootState, rootGetters){
         let keys = Object.keys(state.cart);
         let products = rootGetters['product/products'].products;
+        let total_value = 0;
         // let product_keys = Object.keys(rootGetters['product/products'].products);
         let data = {};
         for (let i=0; i<keys.length; i++){
           data[keys[i]] = products[i];
+          total_value += products[i].cost_price*state.cart[keys[i]];
         }
-        return {products: data};
+        return {
+          products: data,
+          total_value,
+        };
       },
 
     },
@@ -52,6 +57,10 @@ const cart = {namespaced: true,
 
       updateChange(state){
         state.change = false;
+      },
+
+      resetTotal(state){
+        state.total_value = 0;
       }
     },
     
@@ -97,6 +106,7 @@ const cart = {namespaced: true,
             axios.get(path, tokenConfig(context.rootGetters['auth/token'].jwt))
             .then((response) => {
               context.commit('mergeCart', {'cart_data': {}});
+              context.commit('resetTotal');
               context.dispatch('order/fetchOrders','',{ root: true })
               context.commit('order/setOrders', {}, { root : true})
 

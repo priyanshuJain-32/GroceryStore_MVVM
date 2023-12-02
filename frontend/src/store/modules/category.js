@@ -6,20 +6,48 @@ const category = {namespaced: true,
     
     state: () => ({
       categories: [],
+      category_id: -1,
+      category_name: '',
     }),
     
     getters: {
       categories(state){
-        return state.categories;
+        return state.categories
+      },
+      getCategory(state){
+        return {
+          category_id: state.category_id,
+          category_name: state.category_name,
+        }
       }
     },
 
     mutations: {
       setCategories(state, payload){
         state.categories = payload;
+      },
+
+      setEditCategories(state, category_id){
+        const category = state.categories.find(category => category.category_id == category_id)
+        state.category_id = category.category_id
+        state.category_name = category.category_name
+      },
+
+      updateEditCategory(state, payload){
+        state.category_name = payload.category_name
+      },
+
+      updateCategories(state, payload){
+        const index = state.categories.findIndex(category => category.category_id == payload.category_id)
+        state.categories[index] = payload
+      },
+
+      deleteCategories(state, payload){
+        const index = state.categories.findIndex(category => category.category_id == payload.category_id)
+        delete state.categories[index]
       }
     },
-    
+
     actions: {
       async fetchCategories(context) {
         const path =  `${baseUrl}/get_all_category`;
@@ -31,7 +59,29 @@ const category = {namespaced: true,
           console.error('fetchFailed', error)
         })
       },
+
+      async putCategory(context){
+        const path = `${baseUrl}/put_category`
+        const payload = context.rootGetters['category/getCategory']
+        axios.put(path, payload, tokenConfig(context.rootGetters['auth/token'].jwt))
+        .then((response) => {
+          context.commit('updateCategories', payload)
+          console.log(response)
+        }).catch(error => {
+          console.error('putFailed', error)
+        })
+      },
+
+      async deleteCategory(context, category_id){
+        const path = `${baseUrl}/delete_category/${category_id}`
+        axios.delete(path, tokenConfig(context.rootGetters['auth/token'].jwt))
+        .then((response) => {
+          console.log(response)
+        }).catch(error => {
+          console.error('delete Failed', error)
+        })
+      }
     }
   }
 
-  export default category;
+export default category;
