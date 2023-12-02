@@ -1,12 +1,11 @@
 from functools import wraps
-from flask import jsonify, request
+from flask import jsonify
 
 def admin_required(f):
     @wraps(f)
-    def _admin_verify(*args, **kwargs):
-        data = request.get_json()
-        role = data.get('role')
+    def _admin_verify(user, *args, **kwargs):
+        role = user.role
         if role!='admin':
             return jsonify({'message': 'Only Admin Access'}), 401
-        return f(*args, **kwargs)
+        return f(user, *args, **kwargs)
     return _admin_verify

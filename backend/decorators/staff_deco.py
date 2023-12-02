@@ -1,12 +1,11 @@
 from functools import wraps
-from flask import jsonify, request
+from flask import jsonify
 
 def staff_required(f):
     @wraps(f)
-    def _staff_verify(*args, **kwargs):
-        data = request.get_json()
-        role = data.get('role')
-        if role != 'admin' and role != 'manager':
+    def _staff_verify(user, *args, **kwargs):
+        role = user.role
+        if (role != 'admin') and (role != 'manager'):
             return jsonify({'message':'Only Staff Access'}), 401
-        return f(*args, **kwargs)
+        return f(user, *args, **kwargs)
     return _staff_verify

@@ -6,8 +6,8 @@ from ..models.user import Users
 def token_required(f):
     @wraps(f)
     def _verify(*args, **kwargs):
+        print('inside token deco line 9')
         auth_headers = request.headers.get('Authorization', '').split()
-
         invalid_msg = {
             'message': 'Invalid token. Registeration and / or authentication required',
             'authenticated': False
@@ -18,6 +18,7 @@ def token_required(f):
         }
         
         if len(auth_headers) != 2:
+            print('line 20')
             return jsonify(invalid_msg), 401
         
         try:
