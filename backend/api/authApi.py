@@ -1,10 +1,13 @@
-from flask import Blueprint, current_app, request, jsonify
+# Library imports
+from flask import Blueprint, current_app, redirect, request, jsonify, url_for
 from werkzeug.security import generate_password_hash
 import jwt
 from datetime import datetime, timedelta
 
+# Internal imports
 from .. import db
 from ..models.user import Users
+from ..models.requests import Requests
 
 auth = Blueprint('authApi', __name__)
 
@@ -13,10 +16,11 @@ def login():
 	
 	data = request.get_json()
 	user = Users.authenticate(**data)
-
+	
 	if not user:
 		return jsonify({'message': 'Invalid credentials', 'authenticated': False}), 401
-	# user.last_login = datetime.utcnow() + timedelta(minutes=30)
+	
+	user.last_login = datetime.utcnow()
 	db.session.commit()
 	token = jwt.encode({
 		'sub': user.user_name,
@@ -40,10 +44,18 @@ def signup():
 		return jsonify({'message': 'User already exist', 'authenticated': False})
 
 	# Create the new_user and commit to the database
-
-	new_user = Users(name=name_, user_name=user_name_, password=password_, role=role_, last_login = datetime.utcnow() + timedelta(minutes=30))
-	db.session.add(new_user)
-	db.session.commit()
+	if role_=='manager':
+		new_user = Users(name=name_, user_name=user_name_, password=password_, role=role_, last_login=datetime.utcnow())
+		db.session.add(new_user)
+		db.session.commit()
+		new_request = Requests(requester_id_ = new_user.user_id, request_type = 'signup')
+		db.session.add(new_request)
+		db.session.commit()
+		return jsonify({'message': 'Manager signup request submitted', 'authenticated' : True}), 200
+	else:
+		new_user = Users(name=name_, user_name=user_name_, password=password_, role=role_, status='active', last_login=datetime.utcnow())
+		db.session.add(new_user)
+		db.session.commit()
 
 	token = jwt.encode({
 		'sub': new_user.user_name,

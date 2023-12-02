@@ -7,6 +7,7 @@ from .. import db
 from ..models.category import Category
 from ..decorators.token_deco import token_required
 from ..decorators.admin_deco import admin_required
+from ..decorators.staff_deco import staff_required
 
 category = Blueprint('categoryApi',__name__)
 
@@ -45,7 +46,6 @@ def get_all_category(user):
 		return jsonify(category_list)
 		
 	raise NotFoundError(404)
-
 
 #------------------------ GET Category ---------------------------------------------
 @category.route("/get_category/<int:category_id>", methods=['GET'])
@@ -91,36 +91,36 @@ def post_category():
 
 
 #------------------------ PUT Category ---------------------------------------------
-@category.route("/put_category/<int:category_id>", methods=['PUT'])
+@category.route("/put_category", methods=['PUT'])
 @token_required
 @admin_required
-def put_category(category_id):
-	request_data = request.form
+def put_category(user, category_id):
+	request_data = request.get_json()
 	updated_category_name = request_data['category_name']
 
-	old_category = Category.query.filter_by(category_id=category_id).first()
+	old_category = Category.query.filter_by(category_id=request_data['category_id']).first()
 	if old_category == None:
-		raise NotFoundError(404)
+		return jsonify({'message': 'Category not found'}), 404
 
 	if (updated_category_name==None):
-		raise BadRequest('Category name is missing',400)
+		return jsonify({'message': 'Category name is missing'}), 400
 
 	existing_category = Category.query.all()
 	for category in existing_category:
 		if (request_data['category_name']).lower() == (category.category_name).lower():
-			raise BadRequest('Category name is already present',400)
+			return jsonify({'message': 'Category name is already present'}), 400
 
 	old_category.category_name = updated_category_name
 	db.session.commit()
 
-	raise SuccessfullyUpdated(200)
+	return jsonify({'message': 'Successfully updated'})
 
 
 #------------------------ DELETE Category ---------------------------------------------
 @category.route("/delete_category/<int:category_id>", methods=['DELETE'])
 @token_required
 @admin_required
-def delete_category(category_id):
+def delete_category(user, category_id):
 	category_data = Category.query.filter_by(category_id=category_id).first()
 	product_data = category_data.products
 	if category_data:
@@ -130,6 +130,6 @@ def delete_category(category_id):
 				db.session.delete(cart)
 			db.session.delete(product)
 		db.session.commit()
-		raise SuccessfullyDeleted(200)
+		return jsonify({'message': 'Successfully Deleted'}), 200
 	else:
-		raise NotFoundError(404)
+		return jsonify({'message': 'Category not found'}), 404

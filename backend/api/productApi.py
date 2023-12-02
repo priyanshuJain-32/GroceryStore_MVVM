@@ -63,7 +63,7 @@ def get_all_product(user):
 				"expiry_date":product_data.expiry_date})
 		return jsonify(product_list), 200
 
-	raise NotFoundError(404)
+	return jsonify({'message': 'No products in db'}), 200
 
 
 #------------------------ GET Product ---------------------------------------------
@@ -84,40 +84,36 @@ def get_product(product_id):
 		"product_quantity":product_data.product_quantity,
 		"unit_of_measurement":product_data.unit_of_measurement,
 		"expiry_date":product_data.expiry_date}), 200
-	raise NotFoundError(404)
+	return jsonify({'message': 'Product not found'}), 404
 
 
 #------------------------ POST Product ---------------------------------------------
 @product.route("/post_product", methods=['POST'])
 @token_required
 @staff_required
-def post_product():
-	
-	request_data = request.form
-	
+def post_product(user):
+	request_data = request.get_json()
+	print(request_data)
 	if (request_data['product_name']==None):
-		raise BadRequest('Product name is missing',400)
+		return jsonify({'message': "Product name is missing"}),400
 	elif (request_data['sell_price']==None):
-		raise BadRequest('Product selling price is missing',400)
+		return jsonify({'message': "Product sell_price is missing"}),400
 	elif (request_data['cost_price']==None):
-		raise BadRequest('Product cost price is missing',400)
+		return jsonify({'message': "Product cost_price is missing"}),400
 	elif (request_data['discount']==None):
-		raise BadRequest('Product discount is missing, enter 0 if no discount',400)
+		return jsonify({'message': "Product discount is missing"}),400
 	elif (request_data['product_quantity']==None):
-		raise BadRequest('Product quantity is missing',400)
+		return jsonify({'message': "Product quantity is missing"}),400
 	elif (request_data['unit_of_measurement']==None):
-		raise BadRequest('Product unit of measurement is missing',400)
-	elif (request_data['expiry_date']==None):
-		raise BadRequest('Product expiry_date is missing',400)
+		return jsonify({'message': "Product unit_of_measurement is missing"}),400
 	elif (request_data['product_category_id']==None):
-		raise BadRequest('Product category_id is missing, check category first',400)
-
+		return jsonify({'message': "Product category_id is missing"}),400
+	print('line 111 productApi')
 	existing_products = Category.query.filter_by(category_id=request_data['product_category_id']).first()
 	for product in existing_products.products:
 		if (request_data['product_name']).lower() == (product.product_name).lower():
-			raise BadRequest('Product name is already present',400)
-	d_format = '%Y-%m-%d'
-	expiry_date = datetime.strptime(request_data['expiry_date'],d_format)
+			return jsonify({'message': "Product name is already present"}), 200
+	print("line 116 in productApi")
 	new_product = Product(product_name=request_data['product_name'],
 		product_desc=request_data['product_desc'],
 		unit_of_measurement=request_data['unit_of_measurement'],
@@ -125,44 +121,39 @@ def post_product():
 		cost_price=request_data['cost_price'],
 		discount=request_data['discount'],
 		product_quantity=request_data['product_quantity'],
-		expiry_date=expiry_date,
+		expiry_date=request_data['expiry_date'],
 		product_category_id=request_data['product_category_id'])
 	db.session.add(new_product)
 	db.session.commit()
-	raise SuccessfullyAdded(200)
+	return jsonify({'message': 'Added Product Successfully'})
 
 
 #------------------------ PUT Product ---------------------------------------------
-@product.route("/put_product/<int:product_id>", methods=['PUT'])
+@product.route("/put_product", methods=['PUT'])
 @token_required
 @staff_required
-def put_product(product_id):
+def put_product(user):
 	
-	request_data = request.form
-	
-	product_data = Product.query.filter_by(product_id=product_id).first()
+	request_data = request.get_json()
+	print(request_data)
+	product_data = Product.query.filter_by(product_id=request_data['product_id']).first()
 	if product_data:
 		if (request_data['product_name']==None):
-			raise BadRequest('Product name is missing',400)
+			return jsonify({'message': "Product name is missing"}),400
 		elif (request_data['sell_price']==None):
-			raise BadRequest('Product selling price is missing',400)
+			return jsonify({'message': "Product sell_price is missing"}),400
 		elif (request_data['cost_price']==None):
-			raise BadRequest('Product cost price is missing',400)
+			return jsonify({'message': "Product cost_price is missing"}),400
 		elif (request_data['discount']==None):
-			raise BadRequest('Product discount is missing, enter 0 if no discount',400)
+			return jsonify({'message': "Product discount is missing"}),400
 		elif (request_data['product_quantity']==None):
-			raise BadRequest('Product quantity is missing',400)
+			return jsonify({'message': "Product quantity is missing"}),400
 		elif (request_data['unit_of_measurement']==None):
-			raise BadRequest('Product unit of measurement is missing',400)
-		elif (request_data['expiry_date']==None):
-			raise BadRequest('Product expiry_date is missing',400)
+			return jsonify({'message': "Product unit_of_measurement is missing"}),400
 		elif (request_data['product_category_id']==None):
-			raise BadRequest('Product category_id is missing, check category first',400)
-		
+			return jsonify({'message': "Product category_id is missing"}),400	
 		existing_products = Category.query.filter_by(category_id=request_data['product_category_id']).first()
-		for product in existing_products.products:
-			if (request_data['product_name']).lower() == (product.product_name).lower():
-				raise BadRequest('Product name is already present',400)
+		print(existing_products)
 		
 		product_data.product_name = request_data['product_name']
 		product_data.product_desc = request_data['product_desc']
@@ -170,16 +161,12 @@ def put_product(product_id):
 		product_data.sell_price = request_data['sell_price']
 		product_data.cost_price = request_data['cost_price']
 		product_data.discount = request_data['discount']
-		product_data.product_quantity = request_data['product_quantity']
-
-		d_format = '%Y-%m-%d'
-		expiry_date = datetime.strptime(request_data['expiry_date'],d_format)
-		
-		product_data.expiry_date = expiry_date
+		product_data.product_quantity = request_data['product_quantity']		
+		product_data.expiry_date = request_data['expiry_date']
 		product_data.product_category_id = request_data['product_category_id']
 		db.session.commit()
-		raise SuccessfullyUpdated(200)
-	raise NotFoundError(404)
+		return jsonify({'message': 'Product updated successfully'}), 200
+	return jsonify({'message': "No product found"}), 404
 
 
 #------------------------ DELETE Product ---------------------------------------------
@@ -193,6 +180,6 @@ def delete_product(product_id):
 			db.session.delete(cart)	
 		db.session.delete(product_data)
 		db.session.commit()
-		raise SuccessfullyDeleted(200)
+		return jsonify({'message': 'Successfully Deleted'})
 	else:
-		raise NotFoundError(404)
+		return jsonify({'message': 'Product Not found'}), 404
