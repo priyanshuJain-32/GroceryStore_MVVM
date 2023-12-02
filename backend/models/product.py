@@ -13,6 +13,6 @@ class Product(db.Model):
 	unit_of_measurement = db.Column(db.String(), nullable = False)
 	discount = db.Column(db.Float())
 	product_quantity = db.Column(db.Float(), nullable = False)
-	expiry_date = db.Column(db.Date())
+	expiry_date = db.Column(db.String(25), nullable = True)
 
 	product_category_id = db.Column(db.Integer(), db.ForeignKey('category.category_id'))
