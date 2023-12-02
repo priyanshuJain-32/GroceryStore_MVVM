@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy # Importing the database objects and cla
 import os
 from flask_cors import CORS
 from flask_restful import Api
-# from app.models import Address, Cart, Category, Order, Product
+
+from .celery.worker import celery_init_app
 
 db = SQLAlchemy()
 api = Api()
@@ -48,12 +49,11 @@ def create_app():
 	from .api.reportApi import report
 	app.register_blueprint(report)
 
-	#adding blueprint for other parts of the app
-	from .api.userApi import user
-	app.register_blueprint(user)
-
-	
+	#adding blueprint for requests
+	from .api.requestApi import request
+	app.register_blueprint(request)
 
 	return app
- 
-	# Pushing it into the context refer https://flask.palletsprojects.com/en/2.3.x/appcontext/#:~:text=The%20Flask%20application,the%20current%20activity.
+app = create_app()
+celery_app = celery_init_app(app)
+
