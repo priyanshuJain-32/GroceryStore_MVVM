@@ -47,7 +47,7 @@ export default {
 	product() {return this.productById(this.$route.params.product_id)},
 	...mapGetters('auth',['params']),
 	...mapGetters('product',['productById']),
-	...mapGetters('order',['order'])
+	...mapGetters('order',['order']),
 	
   },
   methods: {
@@ -62,7 +62,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
   margin: 40px 0 0;

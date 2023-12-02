@@ -1,14 +1,13 @@
 <template>
   <div class="login-input">
-    <h3>Fill details to Signup</h3>
+    <h3>{{ params.role.charAt(0).toUpperCase() + params.role.slice(1) }} Login</h3>
     <br>
     <label for="username"><b>Username</b></label> | 
-    <input v-model="params.user_name" type="text" placeholder="Enter Username" name="username" required>
+    <input v-model="params.user_name" @keyup="submitLogin" type="text" placeholder="Enter Username" name="username" required>
     <br><br>
     <label for="password"><b>Password</b></label> | 
-    <input v-model="params.password" @input="submitLogin" type="password" placeholder="Enter Password" name="password" required>
-    <!-- <br><br>
-    <button type="button" @click="submitLogin">Login</button> -->
+    <input v-model="params.password" @keyup="submitLogin" type="password" placeholder="Enter Password" name="password" required>
+    
   </div>
 </template>
 

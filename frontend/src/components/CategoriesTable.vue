@@ -1,57 +1,51 @@
 <template>
-    <div class="products-table">
+    <div class="category-table">
 
-		<!-- <div v-for="category in categories" :key="category.category_id"> -->
-			<table id = "product-table" class="table" style="width: 95%; text-align: center;">
+			<table id = "category-table" class="table" style="width: 95%; text-align: center;">
 				<th>Category Id</th>
 				<th>Category Name</th>
 				<th></th>
 				<th></th>
 				
 				<tr v-for="category in categories" :key="category.category_id">
-					<!-- <div v-if="product.product_id in category.category_product_id" > -->
 						
-						<td>{{ category.category_id }}</td>
-						<td><router-link to='/products-user-view/{{$category.category_id}}'>{{ category.category_name }}</router-link></td>
-						<td><router-link to='/products-user-view/\"{{$category.category_id}}\"'>{{ category.category_name }}</router-link></td>
-						
-						<!-- <td>{{ product.sell_price }}</td>
-						<td v-if="params.role == 'manager' || params.role=='admin'">{{ product.product_quantity }}</td>
-						<td>{{ product.discount }}</td>
-						<td>{{ (product.sell_price|int)*(100-product.discount)/100 }}</td>
-						<td>{{ product.expiry_date }}</td> -->
-						
-						<!-- <td><form>
-							<input type="submit" @click="orderPage(product_id=product.product_id)" style="width: 120px;" name="order_product" value = "Buy Now"/></form></td>
-						<td><form>
-							<input type="submit" style="width: 150px;" name="cart_product" value = "Add to Cart"/></form></td> -->
-					<!-- </div> -->
+				<td>{{ category.category_id }}</td>
+				<td>{{ category.category_name }}</td>
+				<td v-if="params.role == 'admin' || params.role=='manager'">
+					<form>
+						<input type="button" @click="editCategory(category.category_id)" style="width: 150px;" name="edit_category" value = "Change Category Name"/>
+					</form>
+				</td>
+
+				<td v-if="params.role == 'admin' || params.role=='manager'">
+					<form>
+						<input type="button" @click="deleteCategory()" style="width: 150px;" name="delete_category" value = "Delete Category"/>
+					</form>					
+				</td>
 				</tr>
-				<td></td>
 				
 			</table>
-		
-		<!-- </div> -->
     
     </div>
 </template>
 
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import router from '@/router';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
-  name: 'ProductsTable',
+  name: 'CategoriesTable',
   computed: {
     ...mapGetters('auth',['params']),
-	...mapGetters('product',['products']),
 	...mapGetters('category',['categories'])
   },
   methods: {
-	orderPage(product_id){
-		this.buyNow(product_id);
+	editCategory(category_id){
+		this.setEditCategory(category_id)
+		router.push(`/edit-category-view/${category_id}`)
 	},
-	...mapActions('product',['buyNow'])
+	...mapMutations('category',['setEditCategory'])
   },
   beforeMount() {
 	this.$store.dispatch('category/fetchCategories')

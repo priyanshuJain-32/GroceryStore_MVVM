@@ -35,6 +35,7 @@
 						<input type="button" @click="this.decrementCart(product.product_id)" style="width: 150px;" name="reduce_cart_product" value = "Delete from Cart"/></form></td>
 			</tr>
 		</table>
+		<h3>Total Cart Value: {{ fullCart.total_value }} </h3>
 		<form>
 			<input type="button" @click="this.checkoutCart" style="width: 150px;" name="checkout_cart" value = "Checkout Cart"/>
 		</form>
