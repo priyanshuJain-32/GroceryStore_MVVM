@@ -1,27 +1,32 @@
 <template>
   <div class="home">
+    <nav>
+    <div v-if="params.role == 'admin'">
+      <router-link @click="setUserRole('manager')" to="/signup"> | Manager SignUp | </router-link>
+      <router-link @click="setUserRole('manager')" to="/login"> | Manager Login | </router-link>
+    </div>
+  </nav>
     <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <LoginInput/>
     <br><br>
-    <button type="button" @click="login">Login</button>
+    <button type="button" @click="loginUser()">Login</button>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import LoginInput from '@/components/LoginInput.vue'
-import { mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'LoginView',
   components: {
     LoginInput
   },
+  computed: {
+    ...mapGetters('auth',['params'])
+  },
   methods: {
-    login() {
-      this.setUserRole('user');
-      this.loginUser();
-    },
     ...mapMutations('auth',['setUserRole']),
     ...mapActions('auth',['loginUser'])
   }
