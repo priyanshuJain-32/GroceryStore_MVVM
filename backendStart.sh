@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ~/myFolder/projectRoot/backend
+cd backend
 
 source auth/bin/activate
 export FLASK_APP=project
