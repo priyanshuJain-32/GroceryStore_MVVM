@@ -4,7 +4,7 @@ from .product import Product
 
 class Orders(db.Model):
 	order_id = db.Column(db.Integer(), primary_key = True)
-	order_quantity = db.Column(db.Integer(), nullable = False)
+	order_quantity = db.Column(db.Float(), nullable = False)
 	sell_date = db.Column(db.DateTime(), nullable = False)
 	order_user_id = db.Column(db.Integer(), db.ForeignKey('users.user_id'))
 	order_product_id = db.Column(db.Integer(), db.ForeignKey('product.product_id'))
@@ -15,6 +15,6 @@ class Orders(db.Model):
 	order_cost_price = db.Column(db.Float(), nullable = False)
 	order_unit_of_measurement = db.Column(db.String(), nullable = False)
 	order_discount = db.Column(db.Float())
-	order_expiry_date = db.Column(db.Date())
+	order_expiry_date = db.Column(db.String(25), nullable = True)
 	
 	products = db.relationship('Product', backref='orders')
