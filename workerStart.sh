@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ~/myFolder/projectRoot/backend
+cd backend
 
 source auth/bin/activate
 celery -A project.celery worker -l info
