@@ -16,27 +16,6 @@ from ..decorators.staff_deco import staff_required
 
 product = Blueprint('productApi',__name__)
 
-class BadRequest(HTTPException):
-	def __init__(self, error_message, status_code):
-		message = {"error_message": error_message}
-		self.response = make_response(json.dumps(message), status_code)
-
-class NotFoundError(HTTPException):
-	def __init__(self, status_code):
-		self.response = make_response('Not found', status_code)
-
-class SuccessfullyAdded(HTTPException):
-	def __init__(self, status_code):
-		self.response = make_response('SuccessfullyAdded', status_code)
-
-class SuccessfullyUpdated(HTTPException):
-	def __init__(self, status_code):
-		self.response = make_response('SuccessfullyUpdated', status_code)
-
-class SuccessfullyDeleted(HTTPException):
-	def __init__(self, status_code):
-		self.response = make_response('SuccessfullyDeleted', status_code)
-
 # ==========================================================================
 # #======================= Product API =====================================
 # ==========================================================================
@@ -173,7 +152,7 @@ def put_product(user):
 @product.route("/delete_product/<int:product_id>", methods=['DELETE'])
 @token_required
 @admin_required
-def delete_product(product_id):
+def delete_product(user, product_id):
 	product_data = Product.query.filter_by(product_id=product_id).first()
 	if product_data:
 		for cart in product_data.cart:
