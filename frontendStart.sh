@@ -1,3 +1,3 @@
 #!/bin/bash
-cd ~/myFolder/projectRoot/frontend
+cd frontend
 npm run serve
