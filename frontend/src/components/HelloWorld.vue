@@ -5,7 +5,7 @@
       Here we sell something special.
     </p>
     <h3>Project Brief</h3>
-      <p>Welcome to my first Javascript project build on MVVM architecture.</p>
+    <p>Welcome to my first Javascript project build on MVVM architecture.</p>
     <h3>Tech Used</h3>
       <p>Vue CLI | VueX | Vue Router | Python | REST-API | SQLITE | Redis | Celery</p>
     <h3>Get Started</h3>

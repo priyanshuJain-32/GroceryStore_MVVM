@@ -2,6 +2,7 @@ import axios from "axios";
 import { config } from "../../utils/config";
 import baseUrl from "../../utils/baseUrl";
 import { isValidJwt } from "../../utils/index";
+import router from "@/router";
 
 const auth = {namespaced: true,
     
@@ -50,7 +51,12 @@ const auth = {namespaced: true,
       setToken(state, payload){
         state.jwt = payload.token;
       },
-      unsetToken(state){
+      unsetUser(state){
+        state.first_name = '';
+        state.last_name = '';
+        state.role = 'user';
+        state.user_name = '';
+        state.password = '';
         state.jwt = '';
       },
       isAuthenticated(state){
@@ -69,9 +75,13 @@ const auth = {namespaced: true,
           }
           axios.post(path, userData, config)
           .then((response) => {
-            context.commit('setToken', response.data)
-            context.dispatch('product/fetchProducts','',{ root: true })
-            context.dispatch('cart/fetchCart', '', { root: true })
+            if (userData.role == 'manager'){
+              router.push('/request-submitted-view')
+            } else {
+              context.commit('setToken', response.data)
+              context.dispatch('product/fetchProducts','',{ root: true })
+              context.dispatch('cart/fetchCart', '', { root: true })
+            }
           }).catch(error => {
             console.error('failedAuthentication', error)
           })
@@ -91,9 +101,13 @@ const auth = {namespaced: true,
             context.dispatch('category/fetchCategories', '', { root: true })
             if (context.state.role == 'user'){
               context.dispatch('cart/fetchCart', '', { root: true })
-            } else {
+              router.push('/products-user-view')
+            } else if(context.state.role == 'admin'){
               context.dispatch('request/fetchRequests', '', { root: true })
-              
+              router.push('/dashboard-staff-view')
+            } else {
+              context.dispatch('request/fetchRequest', '', { root: true})
+              router.push('/dashboard-staff-view')
             }
           }).catch(error => {
             console.error('failedAuthentication', error)
@@ -102,7 +116,7 @@ const auth = {namespaced: true,
         },
         
         logout(context){
-          context.commit('unsetToken');
+          context.commit('unsetUser');
         }
 
     }

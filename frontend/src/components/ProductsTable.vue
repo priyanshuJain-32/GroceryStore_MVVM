@@ -4,6 +4,7 @@
 		<table id = "product-table" class="table" style="width: 95%; text-align: center;">
 			<th>Category Id</th>
 			<th>Category</th>
+			<th>Product Id</th>
 			<th>Product</th>
 			<th>Product Desc</th>
 			<th>Price/ Unit</th>
@@ -19,6 +20,7 @@
 				<div v-if="product.quantity==0">Out of Stock</div>
 					<td>{{ product.product_category_id }}</td>
 					<td>{{ product.product_category }}</td>
+					<td>{{ product.product_id }}</td>
 					<td>{{ product.product_name }}</td>
 					<td>{{ product.product_desc }}</td>
 					<td>{{ product.sell_price }}</td>
@@ -56,6 +58,7 @@
 				<input type="button" @click="sendToAddPage()" style="width: 150px;" name="add_product" value = "Add New Product"/>
 			</form> 
 		</div>
+		
     </div>
 </template>
 

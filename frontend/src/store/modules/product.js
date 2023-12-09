@@ -103,6 +103,13 @@ const product = {namespaced: true,
         state.expiry_date = ''
         state.product_category_id = -1
         state.product_category = ''
+      },
+
+      deleteProductState(state, payload){
+        const index = state.products.findIndex(product => product.product_id == payload);
+        if (index !== -1) {
+          delete state.products[index]
+        }
       }
     },
 
@@ -113,11 +120,6 @@ const product = {namespaced: true,
           axios.get(path, tokenConfig(context.rootGetters['auth/token'].jwt))
           .then((response) => {
             context.commit('setProducts', response.data)
-            if (context.rootGetters['auth/params'].role!='user'){
-              router.push('/dashboard-staff-view')
-            } else {
-              router.push('/products-user-view')  
-            }
           }).catch(error => {
             console.error('fetchFailed', error)
           })
@@ -130,6 +132,7 @@ const product = {namespaced: true,
           axios.post(path, productData, tokenConfig(context.rootGetters['auth/token'].jwt))
           .then((response) => {
             console.log(response.data)
+            context.dispatch('fetchProducts')
             router.push('/products-staff-view')
           }).catch(error => {
             console.error('postProductFailed', error)
@@ -148,6 +151,20 @@ const product = {namespaced: true,
             router.push('/products-staff-view')
           }).catch(error => {
             console.error('postProductFailed', error)
+          })
+        },
+
+        async deleteProduct(context, payload) {
+          const path = `${baseUrl}/delete_product/${payload}`;
+          console.log("reached here in delete product")
+          axios.delete(path, tokenConfig(context.rootGetters['auth/token'].jwt))
+          .then((response) => {
+            console.log(response.data)
+            context.dispatch('fetchProducts')
+            context.commit('clearProduct')
+            router.push('/products-staff-view')
+          }).catch(error => {
+            console.error('deleteProductFailed', error)
           })
         },
     },

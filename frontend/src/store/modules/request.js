@@ -1,6 +1,7 @@
 import axios from "axios";
 import { tokenConfig } from "../../utils/config";
 import baseUrl from "../../utils/baseUrl";
+import router from "@/router";
 
 const request = {namespaced: true,
     
@@ -41,8 +42,8 @@ const request = {namespaced: true,
       },
 
       deleteRequestState(state, payload){
-        const index = state.requests.findIndex(request => request.request_id == payload.request_id);
-        delete state.requests[index]
+        const thekey = state.requests.findIndex(request => request.request_id == payload.request_id);
+        delete state.requests[thekey]
       },
       alterRequestState(state, payload){
         state.request_id = payload.request_id
@@ -50,7 +51,7 @@ const request = {namespaced: true,
         state.requester_id = payload.requester_id
       },
       alterRequestStatus(state, status){
-        state.request_status = status.request_status
+        state.request_status = status
       },
       updateRequestState(state, payload){
         const index = state.requests.findIndex(request => request.request_id == payload.request_id);
@@ -70,12 +71,25 @@ const request = {namespaced: true,
         })
       },
 
+      async fetchRequest(context){
+        const path = `${baseUrl}/get_request`;
+        axios.get(path, tokenConfig(context.rootGetters['auth/token'].jwt))
+        .then((response) => {
+          context.commit('setRequests', response.data)
+          router.push('/dashboard-staff-view')
+        }).catch(error => {
+          console.error('failedFetchRequests', error)
+          throw "WRONG CREDENTIALS";
+        })
+      },
+
       async postRequest(context){
         const path = `${baseUrl}/submit_request`;
         const payload = context.rootGetters['request/getSubmitRequest']
         axios.post(path, payload, tokenConfig(context.rootGetters['auth/token'].jwt))
         .then(response => {
-          context.log(response)
+          context.dispatch('fetchRequest')
+          console.log(response)
         }).catch(error => {
           console.error('submission failed', error)
           throw "Wrong request submission"
@@ -85,8 +99,10 @@ const request = {namespaced: true,
         const path = `${baseUrl}/delete_request/${payload.request_id}`
         axios.delete(path, tokenConfig(context.rootGetters['auth/token'].jwt))
         .then(response => {
-          context.log(response)
-          context.commit('deleteRequestState', payload)
+          console.log(response)
+          context.dispatch('fetchRequests')
+          // context.commit('deleteRequestState', payload)
+          // router.push('dashboard-staff-view')
         }).catch(error => {
           console.error('delete failed', error)
           throw "Wrong request delete"
@@ -97,7 +113,7 @@ const request = {namespaced: true,
         const payload = context.rootGetters['request/requestToChange']
         axios.put(path, payload, tokenConfig(context.rootGetters['auth/token'].jwt))
         .then(response => {
-          context.log(response)
+          console.log(response)
           context.commit('updateRequestState', payload)
         }).catch(error => {
           console.error('delete failed', error)

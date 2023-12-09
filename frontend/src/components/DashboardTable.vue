@@ -1,25 +1,34 @@
 <template>
     <div class="products-table">
-
+		<div v-if="Object.keys(requests.requests)[0] == 'message'">
+		<h2>No requests to show</h2>
+		</div>
+		<div v-if="Object.keys(requests.requests)[0] !== 'message'">
 		<table id = "product-table" class="table" style="width: 95%; text-align: center;">
 			<th>Request Id</th>
 			<th>Request Type</th>
-			<th>Request Status</th>
 			<th v-if="params.role == 'admin'">Requester Id</th>
+			<th>Request Status</th>
+			<th v-if="params.role == 'admin'"></th>
 			<th v-if="params.role == 'admin'"></th>
 			<th v-if="params.role == 'admin'"></th>
 			
 			<tr v-for="request in requests.requests" :key="request.request_id">
 				<td>{{ request.request_id }}</td>
 				<td>{{ request.request_type }}</td>
+				<td v-if="params.role == 'admin'">{{ request.requester_id }}</td>
 				<td>{{ request.request_status }}</td>
-				<td>{{ request.requester_id }}</td>
-				<td v-if="params.role=='admin'">
-					<label for="request_action"><b>Action</b></label> |
-					<select v-model="requestToChange.request_status" @click="updateStatus(request)" name="request_status" required>
-						<option value="approve">Approve</option>
-						<option value="reject">Reject</option>
-					</select>
+				<td v-if="(params.role=='admin') && (request.request_status == 'approve' || request.request_status == 'reject')"></td>
+				<td v-if="(params.role=='admin') && (request.request_status !== 'approve' && request.request_status !== 'reject')">
+					<form>
+						<input type="button" @click="this.commitAlterRequest(request,'approve')" style="width: 150px;" name="approve_request" value = "Approve Request"/>
+					</form>
+				</td>
+				<td v-if="(params.role=='admin') && (request.request_status == 'approve' || request.request_status == 'reject')"></td>
+				<td v-if="params.role=='admin' && (request.request_status!= 'approve' && request.request_status!= 'reject')">
+					<form>
+						<input type="button" @click="this.commitAlterRequest(request, 'reject')" style="width: 150px;" name="reject_request" value = "Reject Request"/>
+					</form>
 				</td>
 				<td v-if="params.role=='admin'">
 					<form>
@@ -28,6 +37,7 @@
 				</td>
 			</tr>
 		</table>
+	</div>
     </div>
 </template>
 
@@ -40,13 +50,13 @@ export default {
 	...mapGetters('request',['requestToChange', 'requests'])
   },
   methods: {
-	updateStatus(request){
+	commitAlterRequest(request, payload){
 		this.alterRequestState(request)
-		this.alterRequestStatus(this.requestToChange)
+		this.alterRequestStatus(payload)
 		this.putRequest()
 	},
 	...mapMutations('request',['alterRequestState','alterRequestStatus']),
-	...mapActions('request',['raiseRequest', 'deleteRequest','putRequest'])
+	...mapActions('request',['deleteRequest','putRequest'])
   },
 }
 </script>

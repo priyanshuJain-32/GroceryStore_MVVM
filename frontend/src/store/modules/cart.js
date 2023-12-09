@@ -22,8 +22,10 @@ const cart = {namespaced: true,
         // let product_keys = Object.keys(rootGetters['product/products'].products);
         let data = {};
         for (let i=0; i<keys.length; i++){
-          data[keys[i]] = products[i];
-          total_value += products[i].cost_price*state.cart[keys[i]];
+          let product = products.find(product => product.product_id == keys[i])
+          data[keys[i]] = product;
+          total_value += product.sell_price*((100-product.discount)/100)*state.cart[keys[i]];
+          data[keys[i]].cart_quantity = state.cart[keys[i]]
         }
         return {
           products: data,
@@ -35,6 +37,7 @@ const cart = {namespaced: true,
 
     mutations: {
       addToCart(state, payload){
+        // const index = state.cart.findIndex(product => product.product_id == payload)
         if (!(payload in state.cart)){
           state.cart[payload] = 1
         } else {
@@ -45,9 +48,6 @@ const cart = {namespaced: true,
       },
       decrementCart(state, payload){
         state.cart[payload] -= 1;
-        if (state.cart[payload] == 0){
-          delete state.cart[payload];
-        }
         state.change = true;
       },
 
@@ -98,7 +98,7 @@ const cart = {namespaced: true,
 
         async checkoutCart(context) {
           const path = `${baseUrl}/checkout_cart`;
-          const payload = context.state.cart;
+          const payload = context.rootGetters['cart/cart'];
           if (Object.keys(payload).length == 0) {
             console.log('Nothing to checkout');
           } else {

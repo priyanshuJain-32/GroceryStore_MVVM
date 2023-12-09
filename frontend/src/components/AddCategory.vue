@@ -1,12 +1,8 @@
 <template>
     <div class="add-category">
-		<br><br>
-		<label for="category_name"><b>Category Name</b></label> | 
-		<input v-model="getCategory.category_name" @input="updateCategory()" type="text" placeholder="Category Name" name="category_name" required>
-
-    
-
-    
+      <br><br>
+      <label for="category_name"><b>Category Name</b></label> | 
+      <input v-model="getCategory.category_name" @input="updateCategory()" type="text" placeholder="Category Name" name="category_name" required>
     </div>
 </template>
 

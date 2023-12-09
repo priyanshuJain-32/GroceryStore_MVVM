@@ -1,6 +1,7 @@
 import axios from "axios";
 import { tokenConfig } from "../../utils/config";
 import baseUrl from "../../utils/baseUrl";
+import router from "@/router";
 
 const category = {namespaced: true,
     
@@ -19,7 +20,10 @@ const category = {namespaced: true,
           category_id: state.category_id,
           category_name: state.category_name,
         }
-      }
+      },
+      categoryById: (state) => (id) => {
+        return state.categories.find(category => category.category_id == id);
+      },
     },
 
     mutations: {
@@ -27,9 +31,9 @@ const category = {namespaced: true,
         state.categories = payload;
       },
 
-      setEditCategories(state, category_id){
+      setEditCategory(state, category_id){
         const category = state.categories.find(category => category.category_id == category_id)
-        state.category_id = category.category_id
+        state.category_id = category_id
         state.category_name = category.category_name
       },
 
@@ -45,6 +49,11 @@ const category = {namespaced: true,
       deleteCategories(state, payload){
         const index = state.categories.findIndex(category => category.category_id == payload.category_id)
         delete state.categories[index]
+      },
+
+      clearCategory(state){
+        state.category_id = -1,
+        state.category_name = ''
       }
     },
 
@@ -60,6 +69,19 @@ const category = {namespaced: true,
         })
       },
 
+      async postCategory(context){
+        const path = `${baseUrl}/post_category`
+        const payload = context.rootGetters['category/getCategory']
+        axios.post(path, payload, tokenConfig(context.rootGetters['auth/token'].jwt))
+        .then((response) => {
+          context.commit('updateCategories', payload)
+          console.log(response)
+          router.push('/categories-staff-view')
+        }).catch(error => {
+          console.error('postFailed', error)
+        })
+      },
+
       async putCategory(context){
         const path = `${baseUrl}/put_category`
         const payload = context.rootGetters['category/getCategory']
@@ -67,6 +89,7 @@ const category = {namespaced: true,
         .then((response) => {
           context.commit('updateCategories', payload)
           console.log(response)
+          router.push('/categories-staff-view')
         }).catch(error => {
           console.error('putFailed', error)
         })
@@ -77,6 +100,8 @@ const category = {namespaced: true,
         axios.delete(path, tokenConfig(context.rootGetters['auth/token'].jwt))
         .then((response) => {
           console.log(response)
+          context.dispatch('product/fetchProducts','',{root: true})
+          router.push('/categories-staff-view')
         }).catch(error => {
           console.error('delete Failed', error)
         })

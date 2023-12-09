@@ -2,13 +2,13 @@
   <nav>
     |
     <router-link v-if="token.jwt == ''" to="/"> | Home | </router-link>
-    <router-link to="/about"> | About | </router-link>
+    <router-link v-if="token.jwt == ''" to="/about"> | About | </router-link>
     <router-link @click="setUserRole('user')" v-if="token.jwt == ''" to="/login"> | User Login | </router-link>
     <router-link @click="setUserRole('user')" v-if="token.jwt == ''" to="/signup"> | Sign Up | </router-link>
     <router-link @click="setUserRole('admin')" v-if="token.jwt == ''" to="/admin-login">| Staff Login | </router-link>
+    <router-link v-if="(token.jwt !== '') && (params.role=='manager' || params.role=='admin')" to="/dashboard-staff-view"> | Dashboard | </router-link>
     <router-link v-if="token.jwt !== '' && (params.role=='manager' || params.role=='admin')" to="/categories-user-view"> | All Categories | </router-link>
     <router-link v-if="token.jwt !== '' && params.role == 'user'" to="/products-user-view/"> | Products | </router-link>
-    <router-link v-if="(token.jwt !== '') && (params.role=='manager' || params.role=='admin')" to="/dashboard-staff-view"> | Dashboard | </router-link>
     <router-link v-if="(token.jwt !== '') && (params.role=='manager' || params.role=='admin')" to="/products-staff-view"> | Products | </router-link>
     <router-link v-if="token.jwt !== '' && params.role == 'user'" to="/cart-user-view"> | Cart | </router-link>
     <router-link v-if="token.jwt !== '' && params.role == 'user'" to="/orders-user-view"> | Orders | </router-link>

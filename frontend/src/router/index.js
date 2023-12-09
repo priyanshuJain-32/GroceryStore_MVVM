@@ -19,13 +19,19 @@ const routes = [
 
   // Staff routes
   {path: '/admin-login', name: 'admin-login', component: () => import('../views/LoginView.vue')},
+  // Staff product routes
   {path: '/products-staff-view', name: 'products-staff-view', component: () => import('../views/ProductsView.vue')},
-  {path: '/dashboard-staff-view', name: 'dashboard-staff-view', component: () => import('../views/DashboardStaffView.vue')},
   {path: '/add-product-view', name: 'add-product-view', component: () => import('../views/AddProductView.vue')},
   {path: '/delete-product-view/:product_id', name: 'delete-product-view', component: () => import('../views/DeleteProductView.vue')},
   {path: '/edit-product-view/:product_id', name: 'edit-product-view', component: () => import('../views/EditProductView.vue')},
+  // Staff category routes
+  {path: '/categories-staff-view', name: 'categories-staff-view', component: () => import('../views/CategoriesView.vue')},
+  {path: '/add-category-view', name: 'add-category-view', component: () => import('../views/AddCategoryView.vue')},
   {path: '/edit-category-view/:category_id', name: 'edit-category-view', component: () => import('../views/EditCategoryView.vue')},
   {path: '/delete-category-view/:category_id', name: 'delete-category-view', component: () => import('../views/DeleteCategoryView.vue')},
+  // Staff request routes
+  {path: '/dashboard-staff-view', name: 'dashboard-staff-view', component: () => import('../views/DashboardStaffView.vue')},
+  {path: '/request-submitted-view', name:'request-submitted-view', component: () => import('../views/RequestSubmittedView.vue')},
 ]
 
 const router = createRouter({

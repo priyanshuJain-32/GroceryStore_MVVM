@@ -39,15 +39,15 @@
 
     <br><br>
     <label for="discount"><b>Discount</b></label> | 
-    <input v-model="productToAdd.cost_price" @input="updateProduct()" type="number" placeholder="Discount" name="discount" required>
+    <input v-model="productToAdd.discount" @input="updateProduct()" type="number" placeholder="Discount" name="discount" required>
 
     <br><br>
     <label for="product_quantity"><b>Product Quantity</b></label> | 
-    <input v-model="productToAdd.product_quantity" @input="updateProduct()" type="number" placeholder="Product Quantity" name="product_quantity" required>
+    <input min="1" v-model="productToAdd.product_quantity" @input="updateProduct()" type="number" placeholder="Product Quantity" name="product_quantity" required>
     
     <br><br>
     <label for="expiry_date"><b>Expiry Date</b></label> | 
-    <input v-model="productToAdd.expiry_date" @input="updateProduct()" type="date" placeholder="Expiry Date" name="expiry_date" required>
+    <input v-model="productToAdd.expiry_date" @input="updateProduct()" type="date" placeholder="Expiry Date" name="expiry_date">
 
     <br><br>
   </div>
@@ -55,9 +55,9 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-
 export default {
   name: 'AddProduct',
+  
   computed: {
     ...mapGetters('product',['productToAdd']),
     ...mapGetters('category',['categories']),

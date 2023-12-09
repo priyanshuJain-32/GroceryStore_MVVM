@@ -19,12 +19,18 @@
 
 				<td v-if="params.role == 'admin' || params.role=='manager'">
 					<form>
-						<input type="button" @click="deleteCategory()" style="width: 150px;" name="delete_category" value = "Delete Category"/>
+						<router-link :to="'/delete-category-view/' + category.category_id">Delete Category</router-link>
 					</form>					
 				</td>
 				</tr>
 				
 			</table>
+			<br><br>
+			<div v-if="params.role == 'manager' || params.role == 'admin'">
+			<form>
+				<input type="button" @click="sendToAddPage()" style="width: 150px;" name="add_category" value = "Add New Category"/>
+			</form> 
+		</div>
     
     </div>
 </template>
@@ -45,7 +51,11 @@ export default {
 		this.setEditCategory(category_id)
 		router.push(`/edit-category-view/${category_id}`)
 	},
-	...mapMutations('category',['setEditCategory'])
+	sendToAddPage(){
+		this.clearCategory()
+		router.push("/add-category-view")
+	},
+	...mapMutations('category',['setEditCategory','clearCategory']),
   },
   beforeMount() {
 	this.$store.dispatch('category/fetchCategories')

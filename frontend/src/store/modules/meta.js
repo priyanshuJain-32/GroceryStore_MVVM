@@ -4,13 +4,17 @@ const meta = {namespaced: true,
     
     state: () => ({
       creator_name: 'Priyanshu_Jain',
+      github: 'https://github.com/priyanshuJain-32'
     }),
     
     getters: {
-      creatorName(state) {
-        return state.creator_name;
-      },
+      getMeta(state) {
+        return {
+          creator_name: state.creator_name,
+          github: state.github
+      }
     }
+  }
 }
 
 export default meta;

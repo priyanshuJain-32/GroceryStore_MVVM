@@ -1,43 +1,30 @@
-// Fix Cart data flow while carting products the current logic just adds items into cart and does not fix it.
-
 <template>
-    <div class="cart-table">
+    <div class="order-table">
 
-		<table id = "cart-table" class="table" style="width: 95%; text-align: center;">
-			<th>Category Id</th>
-			<th>Category</th>
-			<th>Product</th>
+		<table id = "order-table" class="table" style="width: 95%; text-align: center;">
+			<th>Order Id</th>
+			<th>Order date</th>
+			<th>Product Id</th>
+			<th>Product Name</th>
 			<th>Product Desc</th>
-			<th>Price/ Unit</th>
-			<th v-if="params.role == 'manager' || params.role == 'admin'">Available Quantity</th>
+			<th>Product Price</th>
 			<th>Discount %</th>
-			<th>Offer Price</th>
-			<th>Product Expiry Date</th>
-			<th></th>
-			<th></th>
+			<th>Order Quantity</th>
+			<th>Paid Amount</th>
 			
-			<tr v-for="product in fullOrders.products" :key="product.product_id">
-				<div v-if="product.quantity==0">Out of Stock</div>
-					<td>{{ product.product_category_id }}</td>
-					<td>{{ product.product_category }}</td>
-					<td>{{ product.product_name }}</td>
-					<td>{{ product.product_desc }}</td>
-					<td>{{ product.sell_price }}</td>
-					<td v-if="params.role == 'manager' || params.role=='admin'">{{ product.product_quantity }}</td>
-					<td>{{ product.discount }}</td>
-					<td>{{ (parseInt(product.sell_price))*(100-product.discount)/100 }}</td>
-					<td>{{ product.expiry_date }}</td>
-					
-					<td><router-link :to="'/buy-now-user-view/' + product.product_id">Buy Now</router-link></td>
-					<td><form>
-						<input type="button" @click="this.addToCart(product.product_id)" style="width: 150px;" name="cart_product" value = "Add to Cart"/></form></td>
-					<td><form>	
-						<input type="button" @click="this.decrementCart(product.product_id)" style="width: 150px;" name="reduce_cart_product" value = "Delete from Cart"/></form></td>
+			<tr v-for="order in getOrders.orders" :key="order.order_id">
+				<td>{{ order.order_id }}</td>
+				<td>{{ order.sell_date }}</td>
+				<td>{{ order.order_product_id }}</td>
+				<td>{{ order.order_product_name }}</td>
+				<td>{{ order.order_product_desc }}</td>
+				<td>{{ order.order_sell_price }}</td>
+				<td>{{ order.order_discount }}</td>
+				<td>{{ order.order_quantity }}</td>
+				<td>{{ (parseInt(order.order_sell_price))*(100-order.order_discount)/100*order.order_quantity }}</td>
+				
 			</tr>
 		</table>
-		<form>
-			<input type="button" @click="this.checkoutCart" style="width: 150px;" name="checkout_cart" value = "Checkout Cart"/>
-		</form>
     </div>
 </template>
 
@@ -48,11 +35,10 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'ProductsTable',
   computed: {
-    ...mapGetters('auth',['params']),
-	...mapGetters('order',['fullOrders'])
+	...mapGetters('order',['getOrders'])
   },
   methods: {
-	...mapActions('order',['buyNow', 'fetchOrders']),
+	...mapActions('order',['fetchOrders']),
   },
   beforeMount(){
 	this.fetchOrders()	

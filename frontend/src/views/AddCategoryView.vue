@@ -2,21 +2,41 @@
   <div class="addCategory">
     <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <AddCategory/>
-    <button type="button" @click="postCategory()">Add Category</button>
+    <div v-if="params.role == 'admin'">
+			<form>
+				<input type="button" @click="postCategory()" style="width: 150px;" name="add_category" value = "Add Category"/>
+			</form>
+		</div>
+    <div v-if="params.role == 'manager'">
+			<form>
+				<input type="button" @click="submitAddCategoryRequest()" style="width: 150px;" name="submit_add_category_request" value = "Submit Request"/>
+			</form>
+		</div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import AddCategory from '@/components/AddCategory.vue'
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 export default {
   name: 'AddCategoryView',
   components: {
-    AddProduct
+    AddCategory
+  },
+  computed: {
+    ...mapGetters('category',['getCategory']),
+    ...mapGetters('auth',['params'])
   },
   methods: {
-    ...mapActions('category',['postCategory'])
+    submitAddCategoryRequest(){
+      const request = {'request_type': `add_category_${this.getCategory.category_name}`}
+      this.submitRequest(request)
+      this.postRequest()
+    },
+    ...mapActions('category',['postCategory']),
+    ...mapMutations('request',['submitRequest']),
+    ...mapActions('request',['postRequest'])
   },
 }
 </script>
