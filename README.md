@@ -21,6 +21,8 @@
 * Secondary Database - Redis
 * Authentication - JWT Tokens
 * Job Scheduler - Celery
+* Mail-Server - MailHog
+* Cronjob - Celery Beat
 
 #### API
 * Frontend - Axios
