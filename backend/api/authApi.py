@@ -37,6 +37,7 @@ def signup():
 	name_ = data.get('name')
 	role_ = data.get('role')
 	user_name_ = data.get('user_name')
+	email_ = data.get('email')
 	password_ = generate_password_hash(data.get('password'), method='sha256')
 	
 	user = Users.authenticate(**data)
@@ -45,14 +46,14 @@ def signup():
 
 	# Create the new_user and commit to the database
 	if role_=='manager':
-		new_user = Users(name=name_, user_name=user_name_, password=password_, role=role_)
+		new_user = Users(name=name_, user_name=user_name_, email = email_, password=password_, role=role_)
 		db.session.add(new_user)
 		new_request = Requests(requester_id = new_user.user_id, request_type = 'signup_' + user_name_)
 		db.session.add(new_request)
 		db.session.commit()
 		return jsonify({'message': 'Manager signup request submitted', 'authenticated' : True}), 200
 	else:
-		new_user = Users(name=name_, user_name=user_name_, password=password_, role=role_, status='active', last_login=datetime.utcnow())
+		new_user = Users(name=name_, user_name=user_name_, email = email_, password=password_, role=role_, status='active', last_login=datetime.utcnow())
 		db.session.add(new_user)
 		db.session.commit()
 

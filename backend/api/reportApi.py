@@ -16,7 +16,7 @@ report = Blueprint('reportApi',__name__)
 @report.route('/analytics', methods=['GET'])
 @token_required
 @staff_required
-def analytics():
+def analytics(user):
 	category_data = Category.query.all()
 
 	category_names, category_sales = [],[]
@@ -56,4 +56,4 @@ def analytics():
 	plt.bar(product_names, product_sales)
 	
 	plt.savefig(os.path.join(current_dir, "static/product_bar_plot.png"), format='png')
-	return render_template('analytics.html')
+	return category_names, category_sales, product_names, product_sales
