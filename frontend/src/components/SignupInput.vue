@@ -13,6 +13,9 @@
     <label for="username"><b>Username</b></label> | 
     <input v-model="params.user_name" @keyup="submitSignup" type="text" placeholder="Enter Username" name="username" required>
     <br><br>
+    <label for="email"><b>Email</b></label> | 
+    <input v-model="params.email" @keyup="submitSignup" type="text" placeholder="Enter Email" name="email" required>
+    <br><br>
     <label for="password"><b>Password</b></label> | 
     <input v-model="params.password" @keyup="submitSignup" type="password" placeholder="Enter Password" name="password" required>
     <br><br>

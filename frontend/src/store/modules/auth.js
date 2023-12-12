@@ -11,6 +11,7 @@ const auth = {namespaced: true,
       last_name: '',
       role: 'user',
       user_name: '',
+      email: '',
       password: '',
       jwt: ''
       
@@ -23,6 +24,7 @@ const auth = {namespaced: true,
           last_name: state.last_name,
           role: state.role,
           user_name: state.user_name,
+          email: state.email,
           password: state.password
         }
       },
@@ -39,6 +41,7 @@ const auth = {namespaced: true,
         state.last_name = params.last_name;
         state.role = params.role;
         state.user_name = params.user_name;
+        state.email = params.email;
         state.password = params.password;
       },
       userLogin(state, params) {
@@ -56,6 +59,7 @@ const auth = {namespaced: true,
         state.last_name = '';
         state.role = 'user';
         state.user_name = '';
+        state.email = '';
         state.password = '';
         state.jwt = '';
       },
@@ -70,6 +74,7 @@ const auth = {namespaced: true,
           const userData = {
             'name': context.state.first_name+"_"+context.state.last_name,
             'user_name':context.state.user_name,
+            'email':context.state.email,
             'password': context.state.password,
             'role': context.state.role
           }
@@ -91,6 +96,7 @@ const auth = {namespaced: true,
           const path = `${baseUrl}/login`;
           const userData = {
             'user_name' : context.state.user_name,
+            'email': context.state.email,
             'password' : context.state.password,
             'role': context.state.role
           };
