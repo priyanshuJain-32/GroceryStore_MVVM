@@ -6,6 +6,9 @@ class Users(db.Model):
 	user_id = db.Column(db.Integer(), primary_key = True)
 	name = db.Column(db.String(50))
 	user_name = db.Column(db.String(20), nullable = False, unique=True)
+
+	email = db.Column(db.String(50), nullable=False, unique = True)
+	
 	password = db.Column(db.String(250), nullable = False)
 	role = db.Column(db.String(25), nullable = False)
 	status = db.Column(db.String(25), default='inactive', nullable=False)
