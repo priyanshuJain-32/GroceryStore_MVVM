@@ -9,6 +9,7 @@ from ..models.user import Users
 from ..decorators.token_deco import token_required
 from ..decorators.admin_deco import admin_required
 from ..decorators.staff_deco import staff_required
+from ..instance.instances import cache
 
 product = Blueprint('productApi',__name__)
 
@@ -19,6 +20,7 @@ product = Blueprint('productApi',__name__)
 #------------------------ GET All Product ---------------------------------------------
 @product.route("/get_all_product", methods=['GET'])
 @token_required
+@cache.cached(timeout=60)
 def get_all_product(user):
 	
 	all_product_data = Product.query.all()

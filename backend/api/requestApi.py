@@ -61,6 +61,7 @@ def get_all_request(user):
             'requester_id': request.requester_id,
             'request_type': request.request_type,
             'request_status': request.request_status})
+    request_list.reverse()
     return jsonify(request_list), 200
 
 
@@ -68,45 +69,47 @@ def get_all_request(user):
 @token_required
 @admin_required
 def alter_request_status(user):
+
     data = r.get_json()
     request = Requests.query.filter_by(request_id = data["request_id"]).first()
+
     if data["request_status"] == 'approve':
         request.request_status = data["request_status"]
         if data['request_type'].split("_")[0] == 'signup':
             requester_user = Users.query.filter_by(user_name=data['request_type'].split("_")[1]).first()
             requester_user.status = 'active'
             db.session.commit()
-            notification(request.users.email, 'reject')
+            notification(requester_user.email, 'approve')
             return jsonify({'message': 'Manager Signup completed'}), 200
-            # Write else logic in case request is rejected. As manager should get email
         
         elif(data['request_type'].split("_")[0] == 'delete'):
             if (data['request_type'].split("_")[1] == 'product'):
                 productApi.delete_product(int(data['request_type'].split("_")[2]))
-                notification(request.users.email, 'reject')
+                notification(request.users.email, 'approve')
 
             elif (data['request_type'].split("_")[1] == 'category'):
                 categoryApi.delete_category(data['request_type'].split("_")[2])
-                notification(request.users.email, 'reject')
+                notification(request.users.email, 'approve')
         
         elif(data['request_type'].split("_")[0] == 'add'):
             if (data['request_type'].split("_")[1] == 'category'):
                 categoryApi.post_category({"category_name": data['request_type'].split("_")[2]})
-                notification(request.users.email, 'reject')
+                notification(request.users.email, 'approve')
         
         elif(data['request_type'].split("_")[0] == 'update'):
             if (data['request_type'].split("_")[1] == 'category'):
                 categoryApi.put_category({"category_id": data['request_type'].split("_")[-1], 
                                           "category_name": data['request_type'].split("_")[2]})
-                notification(request.users.email, 'reject')
+                notification(request.users.email, 'approve')
     
-    # Add some logic here if needed in case of rejected requests such as notification to manager
     elif data["request_status"] == 'reject':
+        
         if data['request_type'].split("_")[0] == 'signup':
             requester_user = Users.query.filter_by(user_name=data['request_type'].split("_")[1]).first()
-            notification(request.users.email, 'reject')
+            notification(requester_user.email, 'reject')
             db.session.delete(requester_user)
             return jsonify({'message': 'Manager Signup rejected, User deleted'}), 200
+        
         elif(data['request_type'].split("_")[0] == 'delete'):
             if (data['request_type'].split("_")[1] == 'product'):
                 notification(request.users.email, 'reject')
@@ -120,6 +123,7 @@ def alter_request_status(user):
         elif(data['request_type'].split("_")[0] == 'update'):
             if (data['request_type'].split("_")[1] == 'category'):
                 notification(request.users.email, 'reject')
+    
     request.request_status = data["request_status"]
     db.session.commit()
     return jsonify({'message': 'Altered status successfully'}), 200

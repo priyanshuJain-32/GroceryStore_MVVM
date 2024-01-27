@@ -3,11 +3,14 @@ from werkzeug.exceptions import HTTPException
 from flask import make_response
 import json
 from flask import Blueprint, request, jsonify
+
+
 from .. import db
 from ..models.category import Category
 from ..decorators.token_deco import token_required
 from ..decorators.admin_deco import admin_required
 from ..decorators.staff_deco import staff_required
+from ..instance.instances import cache
 
 category = Blueprint('categoryApi',__name__)
 
@@ -16,6 +19,7 @@ category = Blueprint('categoryApi',__name__)
 #------------------------ GET All Category ---------------------------------------------
 @category.route("/get_all_category", methods=['GET'])
 @token_required
+@cache.cached(timeout=60)
 def get_all_category(user):
 	category_data = Category.query.all()
 	category_list = []

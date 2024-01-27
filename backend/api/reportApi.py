@@ -56,4 +56,5 @@ def analytics(user):
 	plt.bar(product_names, product_sales)
 	
 	plt.savefig(os.path.join(current_dir, "static/product_bar_plot.png"), format='png')
-	return category_names, category_sales, product_names, product_sales
+	print(category_names,category_sales, product_names,product_sales)
+	return (category_names, category_sales, product_names, product_sales)

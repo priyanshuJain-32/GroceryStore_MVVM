@@ -46,7 +46,7 @@ def signup():
 
 	# Create the new_user and commit to the database
 	if role_=='manager':
-		new_user = Users(name=name_, user_name=user_name_, email = email_, password=password_, role=role_)
+		new_user = Users(name=name_, user_name=user_name_, email = email_, password=password_, role=role_, last_login=datetime.utcnow())
 		db.session.add(new_user)
 		new_request = Requests(requester_id = new_user.user_id, request_type = 'signup_' + user_name_)
 		db.session.add(new_request)
