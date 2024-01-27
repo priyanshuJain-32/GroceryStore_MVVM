@@ -3,13 +3,13 @@ from flask_sqlalchemy import SQLAlchemy # Importing the database objects and cla
 import os
 from flask_cors import CORS
 from flask_restful import Api
+import flask_excel as excel
+from .instance.instances import cache
 
 from .celery_files import workers
 
-
 db = SQLAlchemy()
 api = Api()
-celery = None
 
 # ====================================== Configuration ===========================================================
 # Start by creating a flask app object
@@ -25,17 +25,11 @@ def create_app():
 	CORS(app, origins=["http://localhost:8080"])
 	api.init_app(app)
 	db.init_app(app)
+	# excel.init_excel(app)
+	cache.init_app(app)
 	app.app_context().push()
 	
 	celery = workers.celery
-
-	celery.conf.update(
-		broker_url = "redis://localhost:6379/1",
-		result_backend = "redis://localhost:6379/2",
-		timezone = "Asia/kolkata",
-		broker_connection_retry_on_startup = True
-	)
-
 	celery.Task = workers.ContextTask
 
 	#adding blueprint for auth routes
@@ -65,6 +59,9 @@ def create_app():
 	#adding blueprint for requests
 	from .api.requestApi import request
 	app.register_blueprint(request)
+
+	from .api.jobsApi import jobs
+	app.register_blueprint(jobs)
 
 	return app, celery
 app, celery = create_app()
