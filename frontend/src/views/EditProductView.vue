@@ -1,6 +1,5 @@
 <template>
   <div class="editProduct">
-    <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <AddProduct/>
     <button type="button" @click="putProduct()">Update Product</button>
   </div>

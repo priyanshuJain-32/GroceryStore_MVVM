@@ -56,6 +56,13 @@ const request = {namespaced: true,
       updateRequestState(state, payload){
         const index = state.requests.findIndex(request => request.request_id == payload.request_id);
         state.requests[index] = payload
+      },
+      resetRequestState(state){
+        state.requests = []
+        state.request_id = -1
+        state.request_status = 'pending'
+        state.request_type = ''
+        state.requester_id = -1
       }
     },
     
@@ -101,8 +108,6 @@ const request = {namespaced: true,
         .then(response => {
           console.log(response)
           context.dispatch('fetchRequests')
-          // context.commit('deleteRequestState', payload)
-          // router.push('dashboard-staff-view')
         }).catch(error => {
           console.error('delete failed', error)
           throw "Wrong request delete"
@@ -115,6 +120,8 @@ const request = {namespaced: true,
         .then(response => {
           console.log(response)
           context.commit('updateRequestState', payload)
+          context.dispatch('category/fetchCategories', '', { root : true })
+          context.dispatch('product/fetchProducts', '', { root : true })
         }).catch(error => {
           console.error('delete failed', error)
           throw "Wrong request delete"

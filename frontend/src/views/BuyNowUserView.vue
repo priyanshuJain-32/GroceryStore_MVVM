@@ -1,6 +1,5 @@
 <template>
   <div class="buyNow">
-    <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <BuyNow/>
   </div>
 </template>

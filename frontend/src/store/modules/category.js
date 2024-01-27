@@ -54,6 +54,11 @@ const category = {namespaced: true,
       clearCategory(state){
         state.category_id = -1,
         state.category_name = ''
+      },
+      resetCategoryState(state){
+        state.categories = []
+        state.category_id = -1
+        state.category_name = ''
       }
     },
 

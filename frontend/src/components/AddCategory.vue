@@ -8,23 +8,28 @@
 
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex'; // took out mapActions
 
 export default {
+
+  // Name of the component
   name: 'AddCategory',
+  
+  // Imports state using Getters for category
   computed: {
-    ...mapGetters('auth',['params']),
+  // ...mapGetters('auth',['params']),
 	...mapGetters('category',['getCategory'])
   },
   methods: {
+    // Reactively update state for category
 	updateCategory(){
 		this.updateEditCategory(this.getCategory)
 	},
-	commitCategory(){
-		this.putCategory()
-	},
+	// commitCategory(){
+	// 	this.putCategory()
+	// },
 	...mapMutations('category',['updateEditCategory']),
-	...mapActions('category', ['putCategory','sendRequest'])
+	// ...mapActions('category', ['putCategory','sendRequest'])
 
   },
 }

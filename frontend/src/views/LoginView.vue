@@ -6,7 +6,6 @@
       <router-link @click="setUserRole('manager')" to="/login"> | Manager Login | </router-link>
     </div>
   </nav>
-    <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <LoginInput/>
     <br><br>
     <button type="button" @click="loginUser()">Login</button>

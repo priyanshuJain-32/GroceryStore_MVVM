@@ -39,6 +39,10 @@ const order = {namespaced: true,
       },
       setOrders(state, payload){
         state.orders = payload
+      },
+      resetOrdersState(state){
+        state.orders = {}
+        state.order_quantity = 0
       }
     },
 

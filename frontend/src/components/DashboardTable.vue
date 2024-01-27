@@ -1,4 +1,13 @@
 <template>
+	<div v-if="params.role == 'admin'">
+		<nav>
+			<input type="button" @click="this.generateCsv('products')" style="width: 150px;" name="generate_products_csv" value = "Export Products csv"/>
+			<input type="button" @click="this.generateCsv('categories')" style="width: 150px;" name="generate_categories_csv" value = "Export Categories csv"/>
+			<input type="button" @click="this.generateCsv('orders')" style="width: 150px;" name="generate_orders_csv" value = "Export Orders csv"/>
+			<input type="button" @click="this.generateCsv('users')" style="width: 150px;" name="generate_users_csv" value = "Export Users csv"/>
+		</nav>
+	</div>
+	<br><br>
     <div class="products-table">
 		<div v-if="Object.keys(requests.requests)[0] == 'message'">
 		<h2>No requests to show</h2>
@@ -56,7 +65,8 @@ export default {
 		this.putRequest()
 	},
 	...mapMutations('request',['alterRequestState','alterRequestStatus']),
-	...mapActions('request',['deleteRequest','putRequest'])
+	...mapActions('request',['deleteRequest','putRequest']),
+	...mapActions('jobs',['generateCsv'])
   },
 }
 </script>

@@ -18,6 +18,9 @@ const product = {namespaced: true,
       expiry_date: '',
       product_category_id: -1,
       product_category: '',
+      search_by_this_query: '',
+      select_search_by: '',
+      searched_products: [],
     }),
     
     getters: {
@@ -44,6 +47,17 @@ const product = {namespaced: true,
           product_category: state.product_category,
         }
       },
+      searchByThis(state){
+        return {
+          search_by_this_query : state.search_by_this_query,
+          select_search_by : state.select_search_by,
+        }
+      },
+      searchedProducts(state){
+        return {
+          products: state.searched_products
+        }
+      }
     },
     mutations: {
       setProducts(state, payload){
@@ -110,6 +124,28 @@ const product = {namespaced: true,
         if (index !== -1) {
           delete state.products[index]
         }
+      },
+
+      updateSearchBy(state, payload){
+        state.search_by_this_query = payload.search_by_this_query
+        state.select_search_by = payload.select_search_by
+      }, 
+
+      resetProductState(state){
+        state.products = []
+        state.product_name = ''
+        state.product_desc = ''
+        state.sell_price = 0.0
+        state.cost_price = 0.0
+        state.unit_of_measurement = ''
+        state.discount = 0.0
+        state.product_quantity = 0.0
+        state.expiry_date = ''
+        state.product_category_id = -1
+        state.product_category = ''
+        state.search_by_this_query = ''
+        state.select_search_by = ''
+        state.searched_products = []
       }
     },
 
@@ -166,6 +202,19 @@ const product = {namespaced: true,
           }).catch(error => {
             console.error('deleteProductFailed', error)
           })
+        },
+        searchBy(context) {
+          console.log("190")
+          if(context.state.select_search_by =='product'){
+            console.log("192")
+            const products = context.state.products.filter(product => product.product_name == context.state.search_by_this_query)
+            context.state.searched_products = products
+          } else if(context.state.select_search_by == 'category'){
+            console.log("196")
+            const products = context.state.products.filter(product => product.product_category == context.state.search_by_this_query)
+            context.state.searched_products = products
+            console.log(products)
+          }
         },
     },
   }

@@ -1,17 +1,17 @@
 <template>
   <div class="products">
-    <ProductsTable/>
+    <SearchTable/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import ProductsTable from '@/components/ProductsTable.vue';
+import SearchTable from '@/components/SearchTable.vue';
 
 export default {
   name: 'ProductsUserView',
   components: {
-    ProductsTable,
+    SearchTable,
   },
 }
 </script>

@@ -1,6 +1,5 @@
 <template>
   <div class="addCategory">
-    <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <AddCategory/>
     <div v-if="params.role == 'admin'">
 			<form>

@@ -1,7 +1,7 @@
 <template>
-    <div class="product-table">
+    <div class="buy-now-table">
 
-		<table id = "product-table" class="table" style="width: 95%; text-align: center;">
+		<table id = "buy-now-table" class="table" style="width: 95%; text-align: center;">
 			<th>Category Id</th>
 			<th>Category</th>
 			<th>Product</th>
@@ -41,20 +41,28 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
-  name: 'ProductsTable',
+  name: 'BuyNow',
   computed: {
-	
-	product() {return this.productById(this.$route.params.product_id)},
+	// Filtering product data for the selected product
+	product() {
+		return this.productById(this.$route.params.product_id)
+	},
 	...mapGetters('auth',['params']),
 	...mapGetters('product',['productById']),
 	...mapGetters('order',['order']),
-	
   },
   methods: {
+	// Execute the buy order
 	completeBuy(){
-		this.setQuantity(this.order)
-		this.buyNow({product_id: this.$route.params.product_id,
-		order_quantity: this.order.order_quantity})
+		
+		// Prepare the state
+		this.setQuantity(this.order) 
+
+		// Send buyNow request to backend
+		this.buyNow({
+			product_id: this.$route.params.product_id,
+			order_quantity: this.order.order_quantity
+		}) 
 	},
 	...mapMutations('order',['setQuantity']),
 	...mapActions('order',['buyNow']),

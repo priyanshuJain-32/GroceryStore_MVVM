@@ -1,6 +1,5 @@
 <template>
   <div class="logout">
-    <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <DashboardTable/>
   </div>
 </template>

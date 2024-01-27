@@ -1,6 +1,5 @@
 <template>
   <div class="signup">
-    <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <SignupInput/>
   </div>
 </template>

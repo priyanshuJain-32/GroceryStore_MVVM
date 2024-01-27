@@ -12,6 +12,7 @@ const routes = [
 
   // User routes
   {path: '/categories-user-view', name: 'categories-user-view', component: () => import('../views/CategoriesView.vue')},
+  {path: '/search-products-user-view/', name: 'search-products-user-view', component: () => import('../views/ProductsSearchView.vue')},
   {path: '/products-user-view/', name: 'products-user-view', component: () => import('../views/ProductsView.vue')},
   {path: '/buy-now-user-view/:product_id', name: 'buy-now-user-view', component: () => import('../views/BuyNowUserView.vue')},
   {path: '/cart-user-view', name: 'cart-user-view', component: () => import('../views/CartUserView.vue')},
@@ -20,6 +21,7 @@ const routes = [
   // Staff routes
   {path: '/admin-login', name: 'admin-login', component: () => import('../views/LoginView.vue')},
   // Staff product routes
+  {path: '/search-products-staff-view', name: 'search-products-staff-view', component: () => import('../views/ProductsSearchView.vue')},
   {path: '/products-staff-view', name: 'products-staff-view', component: () => import('../views/ProductsView.vue')},
   {path: '/add-product-view', name: 'add-product-view', component: () => import('../views/AddProductView.vue')},
   {path: '/delete-product-view/:product_id', name: 'delete-product-view', component: () => import('../views/DeleteProductView.vue')},

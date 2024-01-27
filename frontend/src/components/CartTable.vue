@@ -1,5 +1,3 @@
-// Fix Cart data flow while carting products the current logic just adds items into cart and does not fix it.
-
 <template>
     <div class="cart-table">
 
@@ -40,34 +38,42 @@
 		</table>
 		<h3>Total Cart Value: {{ fullCart.total_value }} </h3>
 		<form>
-			<input type="button" @click="this.checkoutCart" style="width: 150px;" name="checkout_cart" value = "Checkout Cart"/>
+			<input type="button" v-if="fullCart.total_value!=0" @click="this.checkoutCart" style="width: 150px;" name="checkout_cart" value = "Checkout Cart"/>
 		</form>
     </div>
 </template>
-
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'CartTable',
+
+  // Import cart state
   computed: {
-    ...mapGetters('auth',['params']),
+    // ...mapGetters('auth',['params']),
 	...mapGetters('cart',['cart', 'fullCart'])
   },
   methods: {
+	
+	// Adds buyNow action to the button
 	...mapActions('product',['buyNow']),
+
+	// Adds increment and decrement cart mutations
 	...mapMutations('cart',['addToCart','decrementCart']),
+	
+	// Adds actions to add stuff to cart at backend and checkoutCart
 	...mapActions('cart',['cartProducts', 'checkoutCart'])
 
   },
+
+  // Lifecycle hook to load cart before unmounting the app
   beforeUnmount(){
 	this.cartProducts()	
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
   margin: 40px 0 0;

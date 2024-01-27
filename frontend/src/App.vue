@@ -1,4 +1,6 @@
 <template>
+  <img id="logo" src="./assets/Circular_game_of_life.png">
+  <h3>{{ params.role }}</h3>
   <nav>
     |
     <router-link v-if="token.jwt == ''" to="/"> | Home | </router-link>
@@ -7,9 +9,11 @@
     <router-link @click="setUserRole('user')" v-if="token.jwt == ''" to="/signup"> | Sign Up | </router-link>
     <router-link @click="setUserRole('admin')" v-if="token.jwt == ''" to="/admin-login">| Staff Login | </router-link>
     <router-link v-if="(token.jwt !== '') && (params.role=='manager' || params.role=='admin')" to="/dashboard-staff-view"> | Dashboard | </router-link>
+    <router-link v-if="(token.jwt !== '') && (params.role=='manager' || params.role=='admin')" to="/search-products-staff-view"> | Search Products | </router-link>
+    <router-link v-if="token.jwt !== '' && params.role == 'user'" to="/search-products-user-view/"> | Search Products | </router-link>
     <router-link v-if="token.jwt !== '' && (params.role=='manager' || params.role=='admin')" to="/categories-user-view"> | All Categories | </router-link>
-    <router-link v-if="token.jwt !== '' && params.role == 'user'" to="/products-user-view/"> | Products | </router-link>
-    <router-link v-if="(token.jwt !== '') && (params.role=='manager' || params.role=='admin')" to="/products-staff-view"> | Products | </router-link>
+    <router-link v-if="token.jwt !== '' && params.role == 'user'" to="/products-user-view/"> | All Products | </router-link>
+    <router-link v-if="(token.jwt !== '') && (params.role=='manager' || params.role=='admin')" to="/products-staff-view"> | All Products | </router-link>
     <router-link v-if="token.jwt !== '' && params.role == 'user'" to="/cart-user-view"> | Cart | </router-link>
     <router-link v-if="token.jwt !== '' && params.role == 'user'" to="/orders-user-view"> | Orders | </router-link>
     <router-link @click="logout()" v-if="token.jwt !== ''" to="/logout">| Logout |</router-link>
@@ -20,6 +24,7 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
+import './assets/styles.css';
 export default {
   name: 'App',
   computed: {

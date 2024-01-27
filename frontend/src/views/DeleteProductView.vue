@@ -1,6 +1,5 @@
 <template>
   <div class="delete-product-view">
-    <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <h2 v-if="params.role == 'admin'"> Are you sure you want to delete the product and all its data</h2>
     <h2 v-if="params.role == 'manager'"> Are you sure you want to submit request to delete the product and all its data</h2>
     {{ theProduct.product_id }}

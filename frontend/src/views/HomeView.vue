@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <WelcomeMessage/>
   </div>
 </template>

@@ -1,7 +1,22 @@
 <template>
-    <div class="products-table">
+    <div class="search-table">
 
-		<table id = "product-table" class="table" style="width: 95%; text-align: center;">
+		<br><br>
+		<label for="select_searchBy"><b>Search By</b></label> |
+		<select v-model="searchByThis.select_search_by" @click="updateSearch()" name="select_searchBy" required>
+		<option value="category">Category</option>
+		<option value="product">Product</option>
+		</select>
+
+		<label for="search_by"><b>Search Name</b></label> | 
+		<input v-model="searchByThis.search_by_this_query" @input="updateSearch()" type="text" placeholder="Enter to search" name="search_by" required>
+		<br><br>
+		<form>
+			<input type="button" @click="search()" style="width: 150px;" name="search" value = "Search"/>
+		</form>
+		<br><br>
+
+		<table id = "search-table" class="table" style="width: 95%; text-align: center;">
 			<th>Category Id</th>
 			<th>Category</th>
 			<th>Product Id</th>
@@ -16,7 +31,7 @@
 			<th></th>
 			<th></th>
 			
-			<tr v-for="product in products.products" :key="product.product_category_id">
+			<tr v-for="product in searchedProducts.products" :key="product.product_category_id">
 				<div v-if="product.quantity==0">Out of Stock</div>
 					<td>{{ product.product_category_id }}</td>
 					<td>{{ product.product_category }}</td>
@@ -68,12 +83,14 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import router from '@/router';
-
 export default {
   name: 'ProductsTable',
   computed: {
+	// search(){
+	// 	return this.searchBy(this.searchByThis)
+	// },
     ...mapGetters('auth',['params']),
-	...mapGetters('product',['products', 'productById']),
+	...mapGetters('product',['products', 'productById', 'searchByThis', 'searchedProducts']),
 	...mapGetters('cart',['cart'])
   },
   methods: {
@@ -88,8 +105,15 @@ export default {
 		this.clearProduct()
 		router.push('/add-product-view')
 	},
-	...mapActions('product',['buyNow']),
-	...mapMutations('product',['setEditProduct', 'clearProduct']),
+	updateSearch(){
+		this.updateSearchBy(this.searchByThis)
+		this.searchBy()
+	},
+	search(){
+		this.searchBy()
+	},
+	...mapActions('product',['buyNow', 'searchBy']),
+	...mapMutations('product',['setEditProduct', 'clearProduct', 'updateSearchBy']),
 	...mapMutations('cart',['addToCart']),
 	...mapActions('cart',['updateCart', 'fetchCart'])
 
@@ -97,7 +121,7 @@ export default {
 }
 </script>
 
-<!-- <style scoped>
+<style scoped>
 h3 {
   margin: 40px 0 0;
 }
@@ -112,4 +136,4 @@ li {
 a {
   color: #42b983;
 }
-</style> -->
+</style>

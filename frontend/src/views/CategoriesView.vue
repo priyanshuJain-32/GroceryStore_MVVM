@@ -1,6 +1,5 @@
 <template>
   <div class="category">
-    <img alt="Vue logo" src="../assets/Circular_game_of_life.png">
     <CategoriesTable/>
   </div>
 </template>

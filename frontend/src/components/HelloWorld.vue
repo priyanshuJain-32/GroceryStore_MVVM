@@ -7,7 +7,7 @@
     <h3>Project Brief</h3>
     <p>Welcome to my first Javascript project build on MVVM architecture.</p>
     <h3>Tech Used</h3>
-      <p>Vue CLI | VueX | Vue Router | Python | REST-API | SQLITE | Redis | Celery</p>
+      <p>Vue CLI | VueX | Vue Router | Python | REST-API | SQLITE | Redis | Celery | JWT</p>
     <h3>Get Started</h3>
       <p>Start by <router-link to="/signup">signing up</router-link> for a user account and enjoy.</p>
       <p>Thank you for taking the time to view my work.</p>
